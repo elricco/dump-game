@@ -35,7 +35,8 @@ async function demo(): Promise<void> {
   const highscores = createHighscores(stage, config)
   const sounds = createSounds(config, undefined, createSynth(config.vol))
   // Klang-Test: jeden Sound sofort anhören (Klick gibt zugleich Audio frei).
-  const soundtest = document.querySelector('.soundtest')
+  // In der Vorschau der Config-Seite (?preview=1) ohne Knöpfe.
+  const soundtest = params.get('preview') === '1' ? null : document.querySelector('.soundtest')
   const tests: [string, () => void][] = [
     ['Start', sounds.jump],
     ['Landung', sounds.hit],

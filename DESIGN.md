@@ -32,6 +32,12 @@ colors:
   peg: '#aeb6c4'
   pegLight: '#f4f6fa'
   pegShadow: '#6b7383'
+  pageBg: '#14161c'
+  surface: '#1f222c'
+  text: '#eef1f5'
+  muted: '#b4bccb'
+  danger: '#ff8a80'
+  border: '#4a5060'
 typography:
   name:
     fontFamily: Press Start 2P
@@ -44,10 +50,38 @@ typography:
     fontSize: 8px
     fontWeight: 400
     lineHeight: 1
+  configTitle:
+    fontFamily: Press Start 2P
+    fontSize: 24px
+    fontWeight: 400
+    lineHeight: 1.4
+  configHeading:
+    fontFamily: Press Start 2P
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+  configBody:
+    fontFamily: system-ui
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.5
+  configLabel:
+    fontFamily: system-ui
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 1.4
+  configCode:
+    fontFamily: ui-monospace
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.5
 spacing:
   labelGap: 2px
   outlineWidth: 2px
   scoreboardInset: 16px
+  configGap: 16px
+  configSection: 24px
+  configFocus: 3px
 components:
   scoreLabel:
     textColor: '{colors.primary}'
@@ -128,6 +162,42 @@ components:
     backgroundColor: '{colors.pegLight}'
   pegShadow:
     backgroundColor: '{colors.pegShadow}'
+  configPage:
+    backgroundColor: '{colors.pageBg}'
+    textColor: '{colors.text}'
+    typography: '{typography.configBody}'
+  configPanel:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+  configHelp:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.muted}'
+  configError:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.danger}'
+  configField:
+    backgroundColor: '{colors.outline}'
+    textColor: '{colors.text}'
+  configButton:
+    backgroundColor: '{colors.targetRed}'
+    textColor: '{colors.primary}'
+    typography: '{typography.configLabel}'
+  configTitle:
+    backgroundColor: '{colors.pageBg}'
+    textColor: '{colors.gliderStripe}'
+    typography: '{typography.configTitle}'
+  configHeading:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.lavaGlow}'
+    typography: '{typography.configHeading}'
+  configCode:
+    backgroundColor: '{colors.outline}'
+    textColor: '{colors.waterLight}'
+    typography: '{typography.configCode}'
+  configFocus:
+    backgroundColor: '{colors.lavaGlow}'
+  configBorder:
+    backgroundColor: '{colors.border}'
 omitted:
   - section: rounded
     reason: 'Pixel-Grafik und Flächen – keine abgerundeten UI-Elemente.'
@@ -273,3 +343,28 @@ Wasser und Lava als kachelbare Pixel-Muster.
   übernehmen.
 - **Don't:** Keine Webfonts oder externen Bilder außer Emotes und den vom
   Streamer gesetzten `land`/`death`/Sound-URLs.
+
+## Config-Seite (`config.html`)
+
+Werkzeug für den Streamer, nicht Overlay: Hier gelten die normalen Regeln für
+Bedienoberflächen (WCAG 2.2 AA). Der Look zitiert das Spiel, ohne die
+Lesbarkeit zu opfern.
+
+- **Farben:** Seite dunkel (#14161c), Panels (#1f222c) mit 1 px Rahmen
+  (#4a5060, dekorativ), Text hell (#eef1f5), Hilfetexte gedämpft (#b4bccb),
+  Fehler/Hinweise (#ff8a80). Titel in Signal-Orange (#ff5a36), Gruppen-
+  Überschriften in Glut-Gelb (#ffc23d), Ergebnis-URL in Wasser-Hell
+  (#5fb3ff) auf Schwarz. Primärknopf Zielscheiben-Rot (#d7263d) mit weißer
+  Schrift. Alle Textpaare stehen als Komponenten im Kopf und werden vom
+  Linter auf Kontrast geprüft.
+- **Typografie:** Titel (24 px) und Gruppen-Überschriften (12 px) in Press
+  Start 2P, Versalien. Alles andere – Labels (15 px, 600), Felder und
+  Fließtext (16 px), Hilfetexte – in `system-ui`; die URL in
+  `ui-monospace` (14 px).
+- **Layout:** ab 1100 px zwei Spalten – links das Formular, rechts mitlaufend
+  (sticky) Vorschau (16:9) und Ergebnis; darunter einspaltig. Abstände 16 px
+  im Panel, 24 px zwischen Gruppen, maximale Breite 1400 px.
+- **Formen:** eckig wie Pixel-Grafik (keine Rundungen), Felder schwarz mit
+  1 px Rahmen; Fokus immer als 3 px Glut-Gelb-Umrandung mit 2 px Abstand.
+- **Do:** Jedes Feld mit sichtbarem Label, Hilfetext darunter.
+- **Don't:** Keine Pixel-Schrift für Labels, Hilfetexte oder Eingaben.

@@ -1,0 +1,248 @@
+/* Config-Seite – Werte als Variablen aus DESIGN.md (applyConfigVars). */
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('./assets/fonts/PressStart2P-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-pageBg);
+}
+
+.config {
+  margin: 0;
+  padding: var(--config-section) 16px;
+  background: var(--color-pageBg);
+  color: var(--color-text);
+  font:
+    var(--config-body-size) / var(--config-body-line) system-ui,
+    sans-serif;
+}
+
+.config__header,
+.config__layout {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.config__title {
+  margin: 0 0 8px;
+  font:
+    var(--config-title-size) / 1.4 var(--pixel-font),
+    system-ui,
+    sans-serif;
+  color: var(--color-gliderStripe);
+  text-transform: uppercase;
+}
+
+.config__subtitle {
+  margin: 0 0 var(--config-section);
+  color: var(--color-muted);
+}
+
+.config__layout {
+  display: grid;
+  gap: var(--config-section);
+}
+
+@media (min-width: 1100px) {
+  .config__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+
+  .config__side {
+    position: sticky;
+    top: 16px;
+  }
+}
+
+.config__main,
+.config__side,
+.config__form {
+  display: grid;
+  gap: var(--config-section);
+}
+
+.config__panel,
+.config__group {
+  margin: 0;
+  padding: var(--config-gap);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.config__group {
+  display: grid;
+  gap: var(--config-gap);
+}
+
+.config__heading {
+  margin: 0;
+  padding: 0;
+  font:
+    var(--config-heading-size) / 1.6 var(--pixel-font),
+    system-ui,
+    sans-serif;
+  color: var(--color-lavaGlow);
+  text-transform: uppercase;
+}
+
+.config__panel > .config__heading {
+  margin-bottom: var(--config-gap);
+}
+
+.config__field {
+  display: grid;
+  gap: 4px;
+}
+
+.config__field--flag {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.config__field--flag .config__help {
+  grid-column: 1 / -1;
+}
+
+.config__label {
+  font-size: var(--config-label-size);
+  font-weight: var(--config-label-weight);
+}
+
+.config__choices {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.config__choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.config__help {
+  margin: 0;
+  font-size: var(--config-label-size);
+  color: var(--color-muted);
+}
+
+.config__control,
+.config__result {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  background: var(--color-outline);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  font: inherit;
+}
+
+input[type='checkbox'] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-targetRed);
+}
+
+.config__control:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.config__control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.config__result {
+  font:
+    var(--config-code-size) / 1.5 ui-monospace,
+    monospace;
+  color: var(--color-waterLight);
+  resize: vertical;
+  word-break: break-all;
+}
+
+.config__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.config__row > .config__control {
+  flex: 1 1 260px;
+}
+
+.config__row--between {
+  justify-content: space-between;
+  margin-top: 0;
+}
+
+.config__button {
+  min-height: 44px;
+  padding: 8px 16px;
+  background: var(--color-targetRed);
+  color: var(--color-primary);
+  border: 0;
+  border-radius: 0;
+  font-size: var(--config-label-size);
+  font-weight: var(--config-label-weight);
+  cursor: pointer;
+}
+
+.config__button--quiet {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+:focus-visible {
+  outline: var(--config-focus) solid var(--color-lavaGlow);
+  outline-offset: 2px;
+}
+
+.config__preview {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(#5b7fa8, #c9d6e3);
+  border: 1px solid var(--color-border);
+}
+
+.config__preview iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.config__preview-paused {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--color-surface);
+}
+
+.config__preview-paused[hidden],
+.config__preview iframe[hidden] {
+  display: none;
+}
+
+.config__messages {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--color-danger);
+}

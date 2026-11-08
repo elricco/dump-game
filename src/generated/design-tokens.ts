@@ -29,6 +29,12 @@ export const colors = {
   peg: '#aeb6c4',
   pegLight: '#f4f6fa',
   pegShadow: '#6b7383',
+  pageBg: '#14161c',
+  surface: '#1f222c',
+  text: '#eef1f5',
+  muted: '#b4bccb',
+  danger: '#ff8a80',
+  border: '#4a5060',
 } as const
 
 export const typography = {
@@ -45,12 +51,45 @@ export const typography = {
     fontWeight: 400,
     lineHeight: 1,
   },
+  configTitle: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 24,
+    fontWeight: 400,
+    lineHeight: 1.4,
+  },
+  configHeading: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 12,
+    fontWeight: 400,
+    lineHeight: 1.6,
+  },
+  configBody: {
+    fontFamily: 'system-ui',
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: 1.5,
+  },
+  configLabel: {
+    fontFamily: 'system-ui',
+    fontSize: 15,
+    fontWeight: 600,
+    lineHeight: 1.4,
+  },
+  configCode: {
+    fontFamily: 'ui-monospace',
+    fontSize: 14,
+    fontWeight: 400,
+    lineHeight: 1.5,
+  },
 } as const
 
 export const spacing = {
   labelGap: 2,
   outlineWidth: 2,
   scoreboardInset: 16,
+  configGap: 16,
+  configSection: 24,
+  configFocus: 3,
 } as const
 
 export const components = {
@@ -176,5 +215,77 @@ export const components = {
   },
   pegShadow: {
     backgroundColor: '#6b7383',
+  },
+  configPage: {
+    backgroundColor: '#14161c',
+    textColor: '#eef1f5',
+    typography: {
+      fontFamily: 'system-ui',
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: 1.5,
+    },
+  },
+  configPanel: {
+    backgroundColor: '#1f222c',
+    textColor: '#eef1f5',
+  },
+  configHelp: {
+    backgroundColor: '#1f222c',
+    textColor: '#b4bccb',
+  },
+  configError: {
+    backgroundColor: '#1f222c',
+    textColor: '#ff8a80',
+  },
+  configField: {
+    backgroundColor: '#0e0e10',
+    textColor: '#eef1f5',
+  },
+  configButton: {
+    backgroundColor: '#d7263d',
+    textColor: '#ffffff',
+    typography: {
+      fontFamily: 'system-ui',
+      fontSize: '15px',
+      fontWeight: 600,
+      lineHeight: 1.4,
+    },
+  },
+  configTitle: {
+    backgroundColor: '#14161c',
+    textColor: '#ff5a36',
+    typography: {
+      fontFamily: 'Press Start 2P',
+      fontSize: '24px',
+      fontWeight: 400,
+      lineHeight: 1.4,
+    },
+  },
+  configHeading: {
+    backgroundColor: '#1f222c',
+    textColor: '#ffc23d',
+    typography: {
+      fontFamily: 'Press Start 2P',
+      fontSize: '12px',
+      fontWeight: 400,
+      lineHeight: 1.6,
+    },
+  },
+  configCode: {
+    backgroundColor: '#0e0e10',
+    textColor: '#5fb3ff',
+    typography: {
+      fontFamily: 'ui-monospace',
+      fontSize: '14px',
+      fontWeight: 400,
+      lineHeight: 1.5,
+    },
+  },
+  configFocus: {
+    backgroundColor: '#ffc23d',
+  },
+  configBorder: {
+    backgroundColor: '#4a5060',
   },
 } as const

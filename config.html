@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DUMP Game – Overlay einrichten</title>
+    <link rel="stylesheet" href="./src/config.css" />
+  </head>
+  <body class="config">
+    <header class="config__header">
+      <h1 class="config__title">DUMP Game</h1>
+      <p class="config__subtitle">
+        Overlay einrichten – Einstellungen wählen, Vorschau ansehen, URL kopieren.
+      </p>
+    </header>
+
+    <main class="config__layout">
+      <div class="config__main">
+        <section class="config__panel" aria-labelledby="import-heading">
+          <h2 id="import-heading" class="config__heading">Vorhandene URL einlesen</h2>
+          <label class="config__label" for="import-url">Overlay-URL</label>
+          <div class="config__row">
+            <input
+              id="import-url"
+              class="config__control"
+              type="url"
+              autocomplete="off"
+              aria-describedby="import-help"
+              placeholder="https://…/?channel=…"
+            />
+            <button id="import-button" class="config__button" type="button">Einlesen</button>
+          </div>
+          <p id="import-help" class="config__help">
+            Fügt alle Einstellungen aus einer bestehenden URL ins Formular ein.
+          </p>
+        </section>
+
+        <form id="config-form" class="config__form" novalidate aria-label="Einstellungen"></form>
+      </div>
+
+      <aside class="config__side" aria-label="Vorschau und Ergebnis">
+        <section class="config__panel" aria-labelledby="preview-heading">
+          <div class="config__row config__row--between">
+            <h2 id="preview-heading" class="config__heading">Vorschau</h2>
+            <button
+              id="preview-toggle"
+              class="config__button config__button--quiet"
+              type="button"
+              aria-pressed="false"
+            >
+              Vorschau anhalten
+            </button>
+          </div>
+          <div class="config__preview">
+            <iframe
+              id="preview"
+              title="Vorschau des Overlays mit den aktuellen Einstellungen (Demo ohne Chat)"
+            ></iframe>
+            <p id="preview-paused" class="config__help config__preview-paused" hidden>
+              Vorschau angehalten.
+            </p>
+          </div>
+        </section>
+
+        <section class="config__panel" aria-labelledby="result-heading">
+          <h2 id="result-heading" class="config__heading">Deine Overlay-URL</h2>
+          <label class="config__label" for="result">URL für die OBS-Browser-Source</label>
+          <textarea
+            id="result"
+            class="config__result"
+            readonly
+            rows="4"
+            aria-describedby="result-help"
+          ></textarea>
+          <div class="config__row">
+            <button id="copy" class="config__button" type="button">Kopieren</button>
+            <p id="copy-status" class="config__help" role="status"></p>
+          </div>
+          <p id="result-help" class="config__help">
+            In OBS als Browser-Source einfügen, Größe 1920 × 1080 (oder 2560 × 1440). Nur
+            abweichende Werte stehen in der URL.
+          </p>
+          <ul id="messages" class="config__messages" aria-live="polite"></ul>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./src/config-page.ts"></script>
+  </body>
+</html>

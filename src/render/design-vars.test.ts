@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { describe, expect, it } from 'vitest'
-import { applyDesignVars, setUnit } from './design-vars'
+import { applyConfigVars, applyDesignVars, setUnit } from './design-vars'
 
 describe('applyDesignVars', () => {
   it('legt Farben, Schrift und Abstände aus der DESIGN.md als CSS-Variablen an', () => {
@@ -29,5 +29,23 @@ describe('setUnit', () => {
     const stage = document.createElement('div')
     expect(setUnit(stage, 1440)).toBeCloseTo(1440 / 1080)
     expect(stage.style.getPropertyValue('--u')).toBe(String(1440 / 1080))
+  })
+})
+
+describe('applyConfigVars', () => {
+  it('legt Farben, Schriften und Abstände der Config-Seite an', () => {
+    const root = document.createElement('div')
+    applyConfigVars(root)
+    expect(root.style.getPropertyValue('--color-pageBg')).toBe('#14161c')
+    expect(root.style.getPropertyValue('--config-title-size')).toBe('24px')
+    expect(root.style.getPropertyValue('--config-heading-size')).toBe('12px')
+    expect(root.style.getPropertyValue('--config-body-size')).toBe('16px')
+    expect(root.style.getPropertyValue('--config-label-size')).toBe('15px')
+    expect(root.style.getPropertyValue('--config-label-weight')).toBe('600')
+    expect(root.style.getPropertyValue('--config-code-size')).toBe('14px')
+    expect(root.style.getPropertyValue('--config-gap')).toBe('16px')
+    expect(root.style.getPropertyValue('--config-section')).toBe('24px')
+    expect(root.style.getPropertyValue('--config-focus')).toBe('3px')
+    expect(root.style.getPropertyValue('--pixel-font')).toBe('"Press Start 2P"')
   })
 })

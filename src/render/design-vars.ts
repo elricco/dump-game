@@ -28,3 +28,20 @@ export function setUnit(stage: HTMLElement, viewportHeight: number): number {
   stage.style.setProperty('--u', String(unit))
   return unit
 }
+
+/** Tokens der Config-Seite als CSS-Variablen (Größen mit Einheit, für normales CSS). */
+export function applyConfigVars(root: HTMLElement): void {
+  const set = (name: string, value: string | number) => root.style.setProperty(name, String(value))
+  for (const [name, value] of Object.entries(colors)) set(`--color-${name}`, value)
+  set('--pixel-font', `"${typography.configTitle.fontFamily}"`)
+  set('--config-title-size', `${typography.configTitle.fontSize}px`)
+  set('--config-heading-size', `${typography.configHeading.fontSize}px`)
+  set('--config-body-size', `${typography.configBody.fontSize}px`)
+  set('--config-body-line', typography.configBody.lineHeight)
+  set('--config-label-size', `${typography.configLabel.fontSize}px`)
+  set('--config-label-weight', typography.configLabel.fontWeight)
+  set('--config-code-size', `${typography.configCode.fontSize}px`)
+  set('--config-gap', `${spacing.configGap}px`)
+  set('--config-section', `${spacing.configSection}px`)
+  set('--config-focus', `${spacing.configFocus}px`)
+}
