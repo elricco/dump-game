@@ -5,6 +5,7 @@ import { colors } from '../generated/design-tokens'
 import {
   createFigureElement,
   createGlider,
+  createPeg,
   createPixelFigure,
   createTargetPad,
   zoneBackground,
@@ -52,6 +53,14 @@ describe('Pixel-Grafiken', () => {
     expect(glider.getAttribute('viewBox')).toBe('0 0 50 18')
     expect(fills(glider)).toEqual(
       new Set([colors.glider, colors.gliderShade, colors.gliderStripe, colors.outline]),
+    )
+  })
+
+  it('baut den Stift als 12 × 12-Pixelkugel mit Glanz und Schatten', () => {
+    const peg = createPeg()
+    expect(peg.getAttribute('viewBox')).toBe('0 0 12 12')
+    expect(fills(peg)).toEqual(
+      new Set([colors.peg, colors.pegLight, colors.pegShadow, colors.outline]),
     )
   })
 

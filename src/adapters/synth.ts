@@ -3,7 +3,7 @@ import type { Sounds } from './audio'
 /**
  * Eingebaute 16-Bit-Klänge per Web Audio – keine Dateien, keine Downloads.
  * Start: steigender Rechteck-Sweep; Landung: kleines Dur-Arpeggio;
- * Tod: Rausch-Platscher mit fallendem Ton.
+ * Tod: Rausch-Platscher mit fallendem Ton; Stift: kurzer, leiser Tick.
  */
 export function createSynth(volume: number, makeContext = () => new AudioContext()): Sounds {
   let context: AudioContext | null = null
@@ -71,6 +71,10 @@ export function createSynth(volume: number, makeContext = () => new AudioContext
       ;[523.25, 659.25, 783.99, 1046.5].forEach((note, index) =>
         tone(c, 'square', note, note, index * 0.07, 0.12, 0.15),
       )
+    },
+    peg() {
+      const c = audio()
+      if (c) tone(c, 'square', 1568, 1318.5, 0, 0.04, 0.06)
     },
     miss() {
       const c = audio()

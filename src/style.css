@@ -144,6 +144,24 @@ body {
   height: 100%;
 }
 
+.pegs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.peg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.peg__ball {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .zone {
   position: absolute;
   left: 0;

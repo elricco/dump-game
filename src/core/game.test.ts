@@ -16,6 +16,8 @@ const SIZES: GameSizes = {
   figure: { width: 40, height: 60 },
   pad: { width: 200, height: 60, surface: 0 },
   death: { height: 80, surface: 40 },
+  bump: { width: 20, height: 30 },
+  peg: 9,
 }
 
 /** x-Wurf, dann: gerade fallen, Seitwärts, Richtung, schnell sinken, kein Wandrutschen. */
@@ -168,5 +170,64 @@ describe('Game', () => {
     expect(game.width).toBe(600)
     expect(figure.x).toBe(580)
     expect(game.pad.center).toBe(300)
+  })
+})
+
+describe('Game – Bump', () => {
+  const bumpGame = (rolls: number[], query = 'move=0') => {
+    const values = [...rolls]
+    return new Game(config(query), SIZES, 1100, () => values.shift() ?? 0.5)
+  }
+
+  it('bringt eine Bump-Figur ins Spiel und zeigt ab dann die Stifte', () => {
+    const game = bumpGame([0.5, 0.5])
+    expect(game.pegsVisible).toBe(false)
+    const figure = game.spawnBump(anna, null)
+    expect(figure.mode).toBe('bump')
+    expect(figure.state).toBe('falling')
+    expect(game.pegsVisible).toBe(true)
+    expect(game.pegs).toHaveLength(52)
+  })
+
+  it('blendet die Stifte beim Reset wieder aus', () => {
+    const game = bumpGame([0.5, 0.5])
+    game.spawnBump(anna, null)
+    game.reset()
+    expect(game.pegsVisible).toBe(false)
+  })
+
+  it('lässt Bump-Figuren an Stiften abprallen und meldet den Treffer', () => {
+    // x-Wurf so, dass die Figur genau über dem ersten Stift der ersten Reihe startet (x = 100)
+    const game = bumpGame([(100 - 10) / (1100 - 20), 0.5])
+    const figure = game.spawnBump(anna, null)
+    const events = []
+    for (let i = 0; i < 120; i++) events.push(...game.step(1 / 60))
+    expect(events).toContainEqual({ type: 'peg', id: figure.id })
+  })
+
+  it('lässt Gleiter durch die Stifte hindurchfliegen', () => {
+    // gerade fallender Gleiter genau über einem Stift
+    const game = bumpGame([0.5, 0.5, (100 - 20) / (1100 - 40), 0, 0, 0.9, 1, 0.9])
+    game.spawnBump(anna, null) // macht Stifte sichtbar
+    game.figures = []
+    const glider = game.spawnJump({ ...anna, login: 'bert' }, null)
+    const events = []
+    for (let i = 0; i < 600 && glider.state === 'falling'; i++) events.push(...game.step(1 / 60))
+    expect(events.filter((event) => event.type === 'peg')).toEqual([])
+    expect(glider.state).toBe('dead')
+  })
+
+  it('verteilt die Stifte nach einem resize neu', () => {
+    const game = bumpGame([0.5, 0.5])
+    const before = game.pegs[0]?.x
+    game.resize(2200)
+    expect(game.pegs[0]?.x).toBe((before ?? 0) * 2)
+  })
+
+  it('dreht nur Bump-Figuren', () => {
+    const game = bumpGame([0.5, 1])
+    const figure = game.spawnBump(anna, null)
+    game.step(0.1)
+    expect(figure.spin).toBeGreaterThan(0)
   })
 })

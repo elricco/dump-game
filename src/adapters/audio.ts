@@ -15,9 +15,11 @@ export interface Sounds {
   jump(): void
   hit(): void
   miss(): void
+  /** Tick beim Stift (Bump) – immer der eingebaute Klang. */
+  peg(): void
 }
 
-const SILENT: Sounds = { jump: () => {}, hit: () => {}, miss: () => {} }
+const SILENT: Sounds = { jump: () => {}, hit: () => {}, miss: () => {}, peg: () => {} }
 
 /**
  * Sounds für Start, Landung und Tod: eigene URLs, sonst der eingebaute Klang
@@ -41,5 +43,6 @@ export function createSounds(
     jump: player(urls.sndJump, fallback.jump),
     hit: player(urls.sndHit, fallback.hit),
     miss: player(urls.sndMiss, fallback.miss),
+    peg: () => fallback.peg(),
   }
 }

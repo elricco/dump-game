@@ -8,6 +8,8 @@ const SIZES: GameSizes = {
   figure: { width: 54, height: 72 },
   pad: { width: 268, height: 68, surface: 26 },
   death: { height: 80, surface: 40 },
+  bump: { width: 27, height: 36 },
+  peg: 9,
 }
 
 const setup = (query = '', rolls = [0.5, 0, 0, 0.9, 1, 0.9]) => {
@@ -112,5 +114,46 @@ describe('createStageView – Figuren', () => {
     figure.opacity = 0.5
     view.render(game, 0, 1)
     expect((stage.querySelector('.figure') as HTMLElement).style.opacity).toBe('0.5')
+  })
+})
+
+describe('createStageView – Bump', () => {
+  it('zeigt die Stifte erst nach dem ersten Bump und versteckt sie beim Reset', () => {
+    const { game, stage, view } = setup()
+    view.render(game, 0, 1)
+    expect(stage.querySelectorAll('.peg')).toHaveLength(0)
+    game.spawnBump(anna, null)
+    view.render(game, 0, 1)
+    expect(stage.querySelectorAll('.peg')).toHaveLength(game.pegs.length)
+    game.reset()
+    view.render(game, 0, 1)
+    expect(stage.querySelectorAll('.peg')).toHaveLength(0)
+  })
+
+  it('setzt Stifte an ihre Position und Größe in Bildschirm-px', () => {
+    const { game, stage, view } = setup()
+    game.spawnBump(anna, null)
+    view.render(game, 0, 2)
+    const first = stage.querySelector('.peg') as HTMLElement
+    const peg = game.pegs[0]
+    expect(first.style.width).toBe(`${18 * 2}px`)
+    // jsdom rundet px-Werte auf 3 Nachkommastellen → Zahlen vergleichen
+    const [x = NaN, y = NaN] = [...first.style.transform.matchAll(/(-?[\d.]+)px/g)].map((m) =>
+      Number(m[1]),
+    )
+    expect(x).toBeCloseTo((peg?.x ?? 0) * 2 - 18, 2)
+    expect(y).toBeCloseTo((peg?.y ?? 0) * 2 - 18, 2)
+  })
+
+  it('zeichnet Bump-Figuren ohne Gleiter und dreht sie nur (keine Spiegelung)', () => {
+    const { game, stage, view } = setup('', [0.5, 1, 0.5, 0.5])
+    game.spawnBump(anna, null)
+    game.step(0.1)
+    view.render(game, 0, 1)
+    const element = stage.querySelector('.figure') as HTMLElement
+    expect(element.querySelector('.figure__glider')).toBeNull()
+    expect((element.querySelector('.figure__rig') as HTMLElement).style.transform).toMatch(
+      /^rotate\([\d.]+deg\)$/,
+    )
   })
 })

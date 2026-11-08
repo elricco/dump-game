@@ -29,6 +29,9 @@ colors:
   lavaDeep: '#c7360d'
   lavaGlow: '#ffc23d'
   lavaCrust: '#5a1a0b'
+  peg: '#aeb6c4'
+  pegLight: '#f4f6fa'
+  pegShadow: '#6b7383'
 typography:
   name:
     fontFamily: Press Start 2P
@@ -116,6 +119,14 @@ components:
     height: 50px
   customZone:
     height: 44px
+  peg:
+    backgroundColor: '{colors.peg}'
+    width: 18px
+    height: 18px
+  pegLight:
+    backgroundColor: '{colors.pegLight}'
+  pegShadow:
+    backgroundColor: '{colors.pegShadow}'
 omitted:
   - section: rounded
     reason: 'Pixel-Grafik und Flächen – keine abgerundeten UI-Elemente.'
@@ -157,6 +168,8 @@ das Spiel in 1080p, 1440p und 4K gleich aus.
   (#d7263d) und Weiß (#f5f5f5), dunklerer Rand (#8c1c2b) als Kante.
 - **Theme `target` – Wasser:** Blau (#1e6fd9), Tiefe (#14519f), helle
   Wellenkämme und Glitzer (#5fb3ff).
+- **Stifte (Bump):** Metallkugeln in Grau (#aeb6c4) mit Glanz (#f4f6fa)
+  oben links und Schatten (#6b7383) unten rechts.
 - **Theme `lava` – Lava:** Orange (#ff5a1f), Tiefe (#c7360d), Glut
   (#ffc23d), dunkle Kruste (#5a1a0b).
 
@@ -197,6 +210,11 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
   13 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
   URL-Parameter `land_surface` als Anteil der Bildhöhe (Standard 0,4 –
   passt zu Tims Kommode).
+- **Stifte (Bump):** 18 × 18 (Raster 12 × 12, 1,5 Referenz-px je Pixel),
+  5 versetzte Reihen zwischen 25 % und 80 % der Höhe, Abstand nach
+  Bühnenbreite; sichtbar ab dem ersten `!bump` einer Runde bis zum Reset.
+- **Bump-Figur:** ohne Gleiter, taumelt (dreht sich) beim Fallen je nach
+  Seitwärtsbewegung, steht nach der Landung gerade.
 - **Tote** sinken bei Wasser/Lava bis zur Mitte der Zone, bei `custom` bis
   `death_surface` (Anteil der Bildhöhe, Standard 0,8 – passt zu Tims
   Schwertwall), und liegen hinter der Landefläche.

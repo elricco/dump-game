@@ -45,7 +45,11 @@ async function demo(): Promise<void> {
     else if (step < 8) {
       const name = NAMES[step % NAMES.length] ?? 'Demo'
       const emote = EMOTES[step % EMOTES.length] ?? null
-      game.spawnJump({ login: name.toLowerCase(), displayName: name, color: null }, emote)
+      const player = { login: name.toLowerCase(), displayName: name, color: null }
+      // Abwechselnd Jump und Bump; ?modes=jump bzw. ?modes=bump für nur einen Modus.
+      const bump = config.modes.length === 1 ? config.modes[0] === 'bump' : step % 2 === 1
+      if (bump) game.spawnBump(player, emote)
+      else game.spawnJump(player, emote)
     }
     tick++
   }, 1200)
@@ -54,7 +58,11 @@ async function demo(): Promise<void> {
   const frame = (now: number) => {
     const dt = Math.min((now - last) / 1000, 0.1)
     last = now
-    for (const event of game.step(dt)) (event.type === 'landed' ? sounds.hit : sounds.miss)()
+    for (const event of game.step(dt)) {
+      if (event.type === 'landed') sounds.hit()
+      else if (event.type === 'died') sounds.miss()
+      else sounds.peg()
+    }
     view.render(game, dt, unit)
     window.requestAnimationFrame(frame)
   }

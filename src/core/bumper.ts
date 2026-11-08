@@ -3,12 +3,12 @@ import { bounceOffPeg, type Peg } from './pegs'
 import type { FigureState } from './scoring'
 
 /** Referenz-px/s² */
-export const GRAVITY = 900
+export const GRAVITY = 600
 /** Höchste Fallgeschwindigkeit in Referenz-px/s */
-export const MAX_FALL = 420
+export const MAX_FALL = 320
 const START_DRIFT = 60
 const RESTITUTION = 0.55
-const NUDGE = 40
+const NUDGE = 60
 /** Grad Drehung je Referenz-px Seitwärtsweg */
 const SPIN_PER_PX = 1.2
 

@@ -26,6 +26,9 @@ export const colors = {
   lavaDeep: '#c7360d',
   lavaGlow: '#ffc23d',
   lavaCrust: '#5a1a0b',
+  peg: '#aeb6c4',
+  pegLight: '#f4f6fa',
+  pegShadow: '#6b7383',
 } as const
 
 export const typography = {
@@ -161,5 +164,16 @@ export const components = {
   },
   customZone: {
     height: 44,
+  },
+  peg: {
+    backgroundColor: '#aeb6c4',
+    width: 18,
+    height: 18,
+  },
+  pegLight: {
+    backgroundColor: '#f4f6fa',
+  },
+  pegShadow: {
+    backgroundColor: '#6b7383',
   },
 } as const

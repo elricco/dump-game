@@ -42,11 +42,13 @@ describe('createSounds', () => {
       jump: () => builtIn.push('jump'),
       hit: () => builtIn.push('hit'),
       miss: () => builtIn.push('miss'),
+      peg: () => builtIn.push('peg'),
     }
     const sounds = createSounds(urls, create, fallback)
     sounds.miss()
     sounds.hit()
-    expect(builtIn).toEqual(['miss'])
+    sounds.peg()
+    expect(builtIn).toEqual(['miss', 'peg'])
     expect(played.map((sound) => sound.src)).toEqual(['https://a.example/h.mp3'])
   })
 

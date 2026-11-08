@@ -20,10 +20,14 @@ async function imageRatio(url: string): Promise<number> {
 export async function themeSizes(config: Config): Promise<GameSizes> {
   // Breite = Gleiter, damit am Rand nichts abgeschnitten wird; Höhe = Figur.
   const figure = { width: components.glider.width, height: components.figure.height }
+  const bump = { width: components.figure.width, height: components.figure.height }
+  const peg = components.peg.width / 2
   if (config.theme === 'custom' && config.land) {
     const height = components.customPad.height
     return {
       figure,
+      bump,
+      peg,
       pad: {
         width: height * (await imageRatio(config.land)),
         height,
@@ -37,6 +41,8 @@ export async function themeSizes(config: Config): Promise<GameSizes> {
   }
   return {
     figure,
+    bump,
+    peg,
     pad: {
       width: components.targetPad.width,
       height: components.targetPad.height,

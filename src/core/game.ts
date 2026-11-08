@@ -1,9 +1,11 @@
+import { Bumper } from './bumper'
 import { playerColor } from './colors'
-import type { Config } from './config'
+import type { Config, Mode } from './config'
 import { Pad } from './ground'
-import { collide, Jumper, type Lines } from './jumper'
+import { collide, Jumper } from './jumper'
+import type { LandingEvent, Lines } from './landing'
+import { pegLayout, type Peg } from './pegs'
 import { landingScore, opacityFor, type FigureState } from './scoring'
-
 import { STAGE_HEIGHT } from './stage'
 
 export { STAGE_HEIGHT }
@@ -13,13 +15,18 @@ export interface Size {
   height: number
 }
 
-/** Größen bei scale=1 in Referenz-px (aus dem Theme). */
+/** Größen bei scale=1 in Referenz-px (aus DESIGN.md bzw. dem Theme). */
 export interface GameSizes {
+  /** Gleiter-Figur: Breite = Gleiter, Höhe = Figur. */
   figure: Size
   /** surface: so weit unter der Oberkante stehen gelandete Figuren (Oberseite der Fläche). */
   pad: Size & { surface: number }
   /** surface: so weit unter der Oberkante der Todeszone liegen Tote. */
   death: { height: number; surface: number }
+  /** Bump-Figur (ohne Gleiter); Kollisionskreis = halbe Höhe. */
+  bump: Size
+  /** Radius eines Stifts */
+  peg: number
 }
 
 export interface Player {
@@ -28,7 +35,12 @@ export interface Player {
   color: string | null
 }
 
-export type GameEvent = { type: 'landed'; id: string; score: number } | { type: 'died'; id: string }
+export type GameEvent =
+  | { type: 'landed'; id: string; score: number }
+  | { type: 'died'; id: string }
+  | { type: 'peg'; id: string }
+
+type Body = Jumper | Bumper
 
 export class Figure {
   score: number | null = null
@@ -37,26 +49,31 @@ export class Figure {
 
   constructor(
     readonly id: string,
+    readonly mode: Mode,
     readonly displayName: string,
     readonly color: string,
     readonly emote: string | null,
-    private readonly jumper: Jumper,
+    private readonly body: Body,
   ) {}
 
   get x(): number {
-    return this.jumper.x
+    return this.body.x
   }
   get bottom(): number {
-    return this.jumper.bottom
+    return this.body.bottom
   }
   get state(): FigureState {
-    return this.jumper.state
+    return this.body.state
   }
   get velocity(): { x: number; y: number } {
-    return this.state === 'falling' ? { ...this.jumper.velocity } : { x: 0, y: 0 }
+    return this.state === 'falling' ? { ...this.body.velocity } : { x: 0, y: 0 }
   }
   get size(): Size {
-    return this.jumper.size
+    return this.body.size
+  }
+  /** Drehwinkel in Grad (nur Bump-Figuren taumeln; gelandet: gerade). */
+  get spin(): number {
+    return this.body instanceof Bumper && this.state !== 'landed' ? this.body.spin : 0
   }
 
   /** Intern: Landung merken, damit die Figur mit der Fläche mitfährt. */
@@ -66,20 +83,20 @@ export class Figure {
   }
 
   ride(padCenter: number): void {
-    if (this.state === 'landed') this.jumper.x = padCenter + this.offset
+    if (this.state === 'landed') this.body.x = padCenter + this.offset
   }
 
-  step(dt: number, lines: Lines) {
-    return this.jumper.step(dt, lines)
+  step(dt: number, lines: Lines, pegs: readonly (Peg & { r: number })[]) {
+    return this.body instanceof Bumper ? this.body.step(dt, lines, pegs) : this.body.step(dt, lines)
   }
 
   resize(width: number): void {
-    this.jumper.resize(width)
+    this.body.resize(width)
   }
 
-  /** Intern: Zusammenstoß mit einer anderen Figur prüfen und auflösen. */
+  /** Intern: Zusammenstoß zweier Gleiter prüfen und auflösen. */
   collideWith(other: Figure): void {
-    collide(this.jumper, other.jumper)
+    if (this.body instanceof Jumper && other.body instanceof Jumper) collide(this.body, other.body)
   }
 }
 
@@ -88,13 +105,16 @@ const scaled = (size: Size, scale: number): Size => ({
   height: size.height * scale,
 })
 
-/** Spielzustand einer Runde: Figuren, Landefläche, Todeszone. */
+/** Spielzustand einer Runde: Figuren, Landefläche, Todeszone, Stifte. */
 export class Game {
   readonly pad: Pad
   readonly deathHeight: number
-  private readonly deathSurface: number
   readonly padSurface: number
+  readonly pegRadius: number
   figures: Figure[] = []
+  pegs: Peg[]
+  pegsVisible = false
+  private readonly deathSurface: number
   private nextId = 1
 
   constructor(
@@ -107,24 +127,24 @@ export class Game {
     this.padSurface = sizes.pad.surface * config.scale
     this.deathHeight = sizes.death.height * config.scale
     this.deathSurface = sizes.death.surface * config.scale
+    this.pegRadius = sizes.peg * config.scale
+    this.pegs = pegLayout(width)
   }
 
   spawnJump(player: Player, emote: string | null): Figure {
-    const jumper = new Jumper(
-      this.width,
-      scaled(this.sizes.figure, this.config.scale),
-      this.config,
-      this.random,
-    )
-    const figure = new Figure(
-      String(this.nextId++),
-      player.displayName,
-      playerColor(player.login, player.color),
+    const size = scaled(this.sizes.figure, this.config.scale)
+    return this.add('jump', player, emote, new Jumper(this.width, size, this.config, this.random))
+  }
+
+  spawnBump(player: Player, emote: string | null): Figure {
+    const size = scaled(this.sizes.bump, this.config.scale)
+    this.pegsVisible = true
+    return this.add(
+      'bump',
+      player,
       emote,
-      jumper,
+      new Bumper(this.width, size, size.height / 2, this.random),
     )
-    this.figures.push(figure)
-    return figure
   }
 
   step(dt: number): GameEvent[] {
@@ -137,17 +157,18 @@ export class Game {
       },
       death: STAGE_HEIGHT - this.deathHeight + this.deathSurface,
     }
+    const pegs = this.pegsVisible ? this.pegs.map((peg) => ({ ...peg, r: this.pegRadius })) : []
 
     const events: GameEvent[] = []
     for (const figure of this.figures) {
       figure.ride(this.pad.center)
-      const result = figure.step(dt, lines)
+      const result: LandingEvent | { type: 'peg' } | null = figure.step(dt, lines, pegs)
       if (result?.type === 'landed') {
         const score = landingScore(figure.x, lines.pad, this.config.difficulty)
         figure.land(result.offset, score)
         events.push({ type: 'landed', id: figure.id, score })
-      } else if (result?.type === 'died') {
-        events.push({ type: 'died', id: figure.id })
+      } else if (result) {
+        events.push({ type: result.type, id: figure.id })
       }
     }
 
@@ -162,11 +183,26 @@ export class Game {
 
   reset(): void {
     this.figures = []
+    this.pegsVisible = false
   }
 
   resize(width: number): void {
     this.width = width
     this.pad.resize(width)
+    this.pegs = pegLayout(width)
     for (const figure of this.figures) figure.resize(width)
+  }
+
+  private add(mode: Mode, player: Player, emote: string | null, body: Body): Figure {
+    const figure = new Figure(
+      String(this.nextId++),
+      mode,
+      player.displayName,
+      playerColor(player.login, player.color),
+      emote,
+      body,
+    )
+    this.figures.push(figure)
+    return figure
   }
 }

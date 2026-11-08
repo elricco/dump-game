@@ -80,6 +80,15 @@ const TARGET = rasterize(65, 15, (x, y) => {
   return Math.hypot(dx, (y + 0.5 - 8.5) / 5.5) < 1 ? 'R' : '.'
 })
 
+/** Stift als Metallkugel (10 × 10, mit Kontur 12 × 12): Glanz oben links, Schatten unten rechts. */
+const PEG = rasterize(10, 10, (x, y) => {
+  const dx = x + 0.5 - 5
+  const dy = y + 0.5 - 5
+  if (Math.hypot(dx, dy) >= 5) return '.'
+  if (Math.hypot(dx + 2, dy + 2) < 1.6) return 'l'
+  return dx + dy > 3 ? 'd' : 'b'
+})
+
 /** Kachelbares Wasser (30 × 20): Kamm, Tiefe, Glitzer. */
 const WATER = rasterize(30, 20, (x, y) => {
   const crest = 2.5 + 1.5 * Math.sin((x / 30) * Math.PI * 4)
@@ -167,6 +176,14 @@ export function createTargetPad(): SVGSVGElement {
     withOutline(TARGET),
     { r: colors.targetRed, w: colors.targetWhite, R: colors.targetRim, o: colors.outline },
     'pad__target',
+  )
+}
+
+export function createPeg(): SVGSVGElement {
+  return pixelSvg(
+    withOutline(PEG),
+    { b: colors.peg, l: colors.pegLight, d: colors.pegShadow, o: colors.outline },
+    'peg__ball',
   )
 }
 

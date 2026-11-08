@@ -52,10 +52,9 @@ async function start(): Promise<void> {
     if (event.type === 'spawn') {
       const tables = emoteSources.map((source) => source.table)
       emote = resolveEmote(event.message.text, event.message.emotes, tables)
-      if (event.mode === 'jump') {
-        game.spawnJump(event.message, emote)
-        sounds.jump()
-      } // bump: AP 5
+      if (event.mode === 'jump') game.spawnJump(event.message, emote)
+      else game.spawnBump(event.message, emote)
+      sounds.jump()
     } else if (event.type === 'reset') {
       game.reset()
     }
@@ -90,7 +89,8 @@ async function start(): Promise<void> {
     last = now
     for (const event of game.step(dt)) {
       if (event.type === 'landed') sounds.hit()
-      else sounds.miss()
+      else if (event.type === 'died') sounds.miss()
+      else sounds.peg()
     }
     view.render(game, dt, unit)
     window.requestAnimationFrame(frame)
