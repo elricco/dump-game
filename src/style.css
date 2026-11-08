@@ -1,4 +1,5 @@
-/* Overlay fuer OBS: transparenter Hintergrund, feste 1920x1080-Buehne. */
+/* Overlay fuer OBS: transparenter Hintergrund, Buehne fuellt das Fenster
+   (1080p, 1440p, 4K ...). Die Seite scrollt nie - nur der Debug-Bereich. */
 html,
 body {
   margin: 0;
@@ -7,9 +8,16 @@ body {
 }
 
 .stage {
-  position: relative;
-  width: 1920px;
-  height: 1080px;
+  position: fixed;
+  inset: 0;
+}
+
+#status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .status {
