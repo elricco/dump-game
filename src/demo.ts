@@ -32,6 +32,22 @@ async function demo(): Promise<void> {
   const game = new Game(config, await themeSizes(config), window.innerWidth / unit, Math.random)
   const view = createStageView(stage, config)
   const sounds = createSounds(config, undefined, createSynth(config.vol))
+  // Klang-Test: jeden Sound sofort anhören (Klick gibt zugleich Audio frei).
+  const soundtest = document.querySelector('.soundtest')
+  const tests: [string, () => void][] = [
+    ['Start', sounds.jump],
+    ['Landung', sounds.hit],
+    ['Tod', sounds.miss],
+    ['Stift', sounds.peg],
+  ]
+  for (const [label, play] of tests) {
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.textContent = label
+    button.addEventListener('click', () => play())
+    soundtest?.append(button)
+  }
+
   window.addEventListener('resize', () => {
     unit = setUnit(stage, window.innerHeight)
     game.resize(window.innerWidth / unit)

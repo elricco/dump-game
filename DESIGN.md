@@ -213,6 +213,7 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
 - **Stifte (Bump):** 18 × 18 (Raster 12 × 12, 1,5 Referenz-px je Pixel),
   5 versetzte Reihen zwischen 25 % und 80 % der Höhe, Abstand nach
   Bühnenbreite; sichtbar ab dem ersten `!bump` einer Runde bis zum Reset.
+  **Dezent:** Deckkraft 0,4 – sie sollen den Stream nicht dominieren.
 - **Bump-Figur:** ohne Gleiter, taumelt (dreht sich) beim Fallen je nach
   Seitwärtsbewegung, steht nach der Landung gerade.
 - **Tote** sinken bei Wasser/Lava bis zur Mitte der Zone, bei `custom` bis

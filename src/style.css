@@ -148,6 +148,8 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* DESIGN.md: Stifte dezent, damit sie den Stream nicht dominieren. */
+  opacity: 0.4;
 }
 
 .peg {
