@@ -1,0 +1,29 @@
+/* Overlay fuer OBS: transparenter Hintergrund, feste 1920x1080-Buehne. */
+html,
+body {
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+}
+
+.status {
+  margin: 24px;
+  padding: 16px 20px;
+  max-width: 1200px;
+  background: #111;
+  color: #fff;
+  font:
+    20px/1.4 system-ui,
+    sans-serif;
+  white-space: pre-wrap;
+}
+
+.status--error {
+  border-left: 6px solid #ff5a5a;
+}

@@ -96,12 +96,16 @@ Die Aufrufe als **Package-Scripts** kapseln (`pnpm test` / `pnpm lint` /
 `composer test` …) – ein kanonischer Einstieg für Agent, CI und Mensch,
 statt dreimal gepflegter Kommandozeilen.
 
-Für dieses Projekt (Scripts entstehen mit dem ersten Arbeitspaket):
+Für dieses Projekt:
 
 - `pnpm test` – Vitest (TDD)
 - `pnpm lint` – ESLint + `prettier --check .` + `tsc --noEmit`
-- `pnpm depcruise` – Schichten `render → adapters → core`, `core` ohne DOM/Netz
-- `pnpm audit` + `gitleaks detect`
+- `pnpm depcruise` – Schichten `render → adapters → core` (dependency-cruiser);
+  dass `core` kein DOM/Netz nutzt, erzwingt ESLint (`no-restricted-globals`)
+- `pnpm build` – Build für GitHub Pages (relativer `base`)
+- `pnpm audit` + `gitleaks detect` (gitleaks lokal installieren)
+
+TypeScript bleibt auf 6.0.x, bis typescript-eslint TypeScript 7 unterstützt.
 
 ## Spec-Synchronität
 
