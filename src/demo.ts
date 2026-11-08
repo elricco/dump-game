@@ -69,6 +69,7 @@ async function demo(): Promise<void> {
       const bump = config.modes.length === 1 ? config.modes[0] === 'bump' : step % 2 === 1
       if (bump) game.spawnBump(player, emote)
       else game.spawnJump(player, emote)
+      sounds.jump()
     }
     tick++
   }, 1200)
