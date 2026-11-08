@@ -88,6 +88,14 @@ body {
   text-transform: uppercase;
 }
 
+.figure__rig {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Drehpunkt: Steuerbuegel des Gleiters, dort haengt die Figur. */
+  transform-origin: 50% calc(var(--glider-h) * var(--k));
+}
+
 .figure__glider {
   width: calc(var(--glider-w) * var(--k));
   height: calc(var(--glider-h) * var(--k));

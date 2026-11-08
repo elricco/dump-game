@@ -49,6 +49,9 @@ export class Figure {
   get state(): FigureState {
     return this.jumper.state
   }
+  get velocity(): { x: number; y: number } {
+    return this.state === 'falling' ? { ...this.jumper.velocity } : { x: 0, y: 0 }
+  }
   get size(): Size {
     return this.jumper.size
   }

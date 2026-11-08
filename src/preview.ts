@@ -2,6 +2,7 @@
 import { STAGE_HEIGHT } from './core/game'
 import { components } from './generated/design-tokens'
 import { applyDesignVars, setUnit } from './render/design-vars'
+import { poseFor } from './render/pose'
 import { createFigureElement, createTargetPad, zoneBackground } from './render/sprites'
 
 const stage = document.getElementById('stage')
@@ -61,18 +62,22 @@ themes.forEach(({ theme, label }, index) => {
 
   // Fallende Figuren am Gleiter
   const falling = [
-    { displayName: 'ElRicco1978', color: '#8a2be2', emote: null, x: 0.25, y: 260 },
-    { displayName: 'FranklyFaye', color: '#ff4500', emote: null, x: 0.7, y: 420 },
+    { displayName: 'ElRicco1978', color: '#8a2be2', emote: null, x: 0.25, y: 260, vx: 240 },
+    { displayName: 'FranklyFaye', color: '#ff4500', emote: null, x: 0.7, y: 420, vx: -90 },
     {
       displayName: 'cmonDancer',
       color: '#1e90ff',
       emote: 'https://cdn.7tv.app/emote/01FP0SVC4R0001BCZZ99DVJFP8/4x.webp',
       x: 0.45,
       y: 640,
+      vx: 0,
     },
   ]
   for (const figure of falling) {
     const element = createFigureElement({ ...figure, withGlider: true })
+    const pose = poseFor({ x: figure.vx, y: 180 }, 1)
+    const rig = element.querySelector<HTMLElement>('.figure__rig')
+    if (rig) rig.style.transform = `rotate(${pose.tilt}deg) scaleX(${pose.facing})`
     place(element, figure.x * columnWidth, figure.y)
     column.append(element)
   }

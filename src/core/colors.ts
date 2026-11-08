@@ -24,3 +24,12 @@ export function playerColor(login: string, chatColor: string | null): string {
   for (const char of login) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
   return DEFAULT_COLORS[hash % DEFAULT_COLORS.length] ?? DEFAULT_COLORS[0]
 }
+
+/** Mischt Richtung Weiß (amount > 0) oder Schwarz (amount < 0); amount in −1 … 1. */
+export function shade(hex: string, amount: number): string {
+  const channels = [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16))
+  return `#${channels
+    .map((value) => (amount >= 0 ? value + (255 - value) * amount : value * (1 + amount)))
+    .map((value) => Math.round(value).toString(16).padStart(2, '0'))
+    .join('')}`
+}

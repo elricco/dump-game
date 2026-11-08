@@ -100,6 +100,15 @@ describe('Game', () => {
     expect(figure.opacity).toBe(1)
   })
 
+  it('verrät die Fluggeschwindigkeit, nach der Landung steht die Figur still', () => {
+    const values = [0.5, 0.5, 1, 0.9, 1, 0.9] // nicht gerade, 4 seitwärts nach rechts, 4 sinken
+    const game = new Game(config('move=0'), SIZES, 1000, () => values.shift() ?? 0)
+    const figure = game.spawnJump(anna, null)
+    expect(figure.velocity).toEqual({ x: 240, y: 240 })
+    runUntilSettled(game)
+    expect(figure.velocity).toEqual({ x: 0, y: 0 })
+  })
+
   it('leert das Feld beim Reset', () => {
     const game = new Game(config(), SIZES, 1000, dropAt(0.5))
     game.spawnJump(anna, null)

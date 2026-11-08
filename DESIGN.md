@@ -1,14 +1,21 @@
 ---
 version: alpha
 name: DUMP Game
-description: Overlay-Spiel für Twitch – Pixel-Figuren am Hängegleiter über dem Stream, Landefläche und Todeszone am unteren Rand.
+description: Overlay-Spiel für Twitch im 16-Bit-Look – Pixel-Figuren am Hängegleiter über dem Stream, Landefläche und Todeszone am unteren Rand.
 colors:
   primary: '#ffffff'
   outline: '#0e0e10'
   skin: '#f1c27d'
+  skinShadow: '#c98f52'
   helmet: '#3a3f4b'
-  goggles: '#7fd3ff'
+  helmetLight: '#626b80'
+  helmetShadow: '#22252d'
+  goggles: '#3fa9f5'
+  gogglesGlint: '#d9f4ff'
+  gloves: '#f2efe6'
+  belt: '#1b1b1f'
   boots: '#2a2a2a'
+  bootsLight: '#55555c'
   glider: '#eef1f5'
   gliderStripe: '#ff5a36'
   gliderShade: '#b9c0cc'
@@ -17,7 +24,9 @@ colors:
   targetRim: '#8c1c2b'
   water: '#1e6fd9'
   waterLight: '#5fb3ff'
+  waterDeep: '#14519f'
   lava: '#ff5a1f'
+  lavaDeep: '#c7360d'
   lavaGlow: '#ffc23d'
   lavaCrust: '#5a1a0b'
 typography:
@@ -45,18 +54,32 @@ components:
     typography: '{typography.name}'
   figure:
     backgroundColor: '{colors.skin}'
-    width: 48px
+    width: 54px
     height: 72px
+  figureSkinShadow:
+    backgroundColor: '{colors.skinShadow}'
   figureHelmet:
     backgroundColor: '{colors.helmet}'
+  figureHelmetLight:
+    backgroundColor: '{colors.helmetLight}'
+  figureHelmetShadow:
+    backgroundColor: '{colors.helmetShadow}'
   figureGoggles:
     backgroundColor: '{colors.goggles}'
+  figureGogglesGlint:
+    backgroundColor: '{colors.gogglesGlint}'
+  figureGloves:
+    backgroundColor: '{colors.gloves}'
+  figureBelt:
+    backgroundColor: '{colors.belt}'
   figureBoots:
     backgroundColor: '{colors.boots}'
+  figureBootsLight:
+    backgroundColor: '{colors.bootsLight}'
   glider:
     backgroundColor: '{colors.glider}'
-    width: 144px
-    height: 52px
+    width: 150px
+    height: 54px
   gliderStripe:
     backgroundColor: '{colors.gliderStripe}'
   gliderShade:
@@ -65,8 +88,8 @@ components:
     height: 72px
   targetPad:
     backgroundColor: '{colors.targetRed}'
-    width: 260px
-    height: 60px
+    width: 268px
+    height: 68px
   targetPadRing:
     backgroundColor: '{colors.targetWhite}'
   targetPadRim:
@@ -76,9 +99,13 @@ components:
     height: 80px
   waterZoneCrest:
     backgroundColor: '{colors.waterLight}'
+  waterZoneDeep:
+    backgroundColor: '{colors.waterDeep}'
   lavaZone:
     backgroundColor: '{colors.lava}'
     height: 80px
+  lavaZoneDeep:
+    backgroundColor: '{colors.lavaDeep}'
   lavaZoneGlow:
     backgroundColor: '{colors.lavaGlow}'
   lavaZoneCrust:
@@ -98,9 +125,9 @@ omitted:
 
 Ein Spiel, das **über** dem Stream liegt, nicht ein Fenster im Stream. Alles
 ist transparent bis auf die Figuren, die Landefläche und die Todeszone am
-unteren Rand. Der Look ist verspielt-retro: kleine Pixel-Männchen im
-Fallschirmspringer-Anzug, ein heller Hängegleiter mit Signalstreifen,
-kräftige Flächen unten. Lesbarkeit auf **jedem** Stream-Hintergrund (hell,
+unteren Rand. Der Look ist **16 Bit**: Pixel-Grafik mit Schattierung in drei
+Tönen (Licht von links oben), kleine Männchen im Fliegeranzug, ein heller
+Hängegleiter mit Signalstreifen, gerasterte Zielscheibe, Wasser und Lava. Lesbarkeit auf **jedem** Stream-Hintergrund (hell,
 dunkel, bunt, Webcam) geht vor Feinheit – deshalb tragen alle Texte eine
 dicke dunkle Kontur.
 
@@ -117,16 +144,19 @@ das Spiel in 1080p, 1440p und 4K gleich aus.
   (ohne Chatfarbe: feste Twitch-Standardfarbe je Login). Sie ist kein Token,
   weil sie zur Laufzeit kommt; die Kontur sorgt für Lesbarkeit unabhängig
   von der Farbe.
-- **Figur:** Haut (#f1c27d), Helm (#3a3f4b), Brille (#7fd3ff), Stiefel
-  (#2a2a2a).
+- **Figur:** Haut (#f1c27d / Schatten #c98f52), Helm (#3a3f4b, Licht
+  #626b80, Schatten #22252d), Brille (#3fa9f5 mit Glanz #d9f4ff),
+  Handschuhe (#f2efe6), Gürtel (#1b1b1f), Stiefel (#2a2a2a, Licht #55555c).
+- **Anzug-Schattierung:** aus der Spielerfarbe berechnet – Licht = 30 %
+  Richtung Weiß, Schatten = 35 % Richtung Schwarz.
 - **Gleiter:** Segel hell (#eef1f5), Schattenseite (#b9c0cc), Signalstreifen
   (#ff5a36).
 - **Theme `target`/`lava` – Landefläche:** flach liegende Zielscheibe in Rot
   (#d7263d) und Weiß (#f5f5f5), dunklerer Rand (#8c1c2b) als Kante.
-- **Theme `target` – Wasser:** Blau (#1e6fd9) mit hellen Wellenkämmen
-  (#5fb3ff).
-- **Theme `lava` – Lava:** Orange (#ff5a1f), Glut (#ffc23d), dunkle Kruste
-  (#5a1a0b).
+- **Theme `target` – Wasser:** Blau (#1e6fd9), Tiefe (#14519f), helle
+  Wellenkämme und Glitzer (#5fb3ff).
+- **Theme `lava` – Lava:** Orange (#ff5a1f), Tiefe (#c7360d), Glut
+  (#ffc23d), dunkle Kruste (#5a1a0b).
 
 Die Grafikfarben (Figur, Gleiter, Flächen) sind keine Textfarben; sie stehen
 deshalb nur als `backgroundColor` in Komponenten und werden nicht gegen
@@ -144,10 +174,12 @@ externen Requests und nichts nachzuladen.
 
 ## Layout
 
-- Figur-Kasten 48 × 72, Gleiter 144 × 52 mittig darüber, Name 4 px über dem
+- Figur-Kasten 54 × 72 (Raster 18 × 24 inkl. Kontur, 3 Referenz-px je
+  Pixel), Gleiter 150 × 54 (Raster 50 × 18) mittig darüber, Name 4 px über dem
   Gleiter (bzw. über der Figur, wenn kein Gleiter), Prozentzahl 4 px darüber.
 - Emote statt Figur: 72 px hoch, Breite nach Seitenverhältnis.
-- Landefläche `target`/`lava`: 260 × 60, steht auf dem unteren Rand und
+- Landefläche `target`/`lava`: 268 × 68 (Raster 67 × 17, 4 Referenz-px je
+  Pixel), steht auf dem unteren Rand und
   überdeckt die Todeszone.
 - Todeszone `target`/`lava`: volle Breite, 80 hoch, Muster läuft langsam
   seitlich durch.
@@ -163,16 +195,24 @@ Figuren, Texte.
 
 ## Shapes
 
-Pixel-Grafik mit `shape-rendering: crispEdges`, harte Kanten. Gleiter als
-Delta-Flügel, Zielscheibe als Ellipse mit drei Ringen.
+Pixel-Grafik mit `shape-rendering: crispEdges` bzw. `image-rendering:
+pixelated`, harte Kanten, 1 Pixel dunkle Kontur um Figur und Gleiter.
+Gleiter als Delta-Flügel in Seitenansicht (Nase in Flugrichtung),
+Zielscheibe als gerasterte Ellipse mit fünf Ringen und sichtbarer Kante,
+Wasser und Lava als kachelbare Pixel-Muster.
 
 ## Components
 
-- **figure:** 10 × 15-Pixel-Raster, Helm mit Brille, Anzug in
-  Spielerfarbe, Gürtel und Stiefel. Hängt mit beiden Armen an der Stange des
-  Gleiters.
-- **glider:** Delta-Flügel, helle Oberseite, Schattenseite, ein
-  Signalstreifen.
+- **figure:** 16 × 22-Pixel-Raster, schaut nach rechts (Brillenglanz und
+  Stiefelspitzen vorn), Helm mit Brille, schattierter Anzug in
+  Spielerfarbe, Gürtel, Handschuhe, Stiefel. Hängt mit beiden Armen an der
+  Stange des Gleiters.
+- **glider:** Delta-Flügel in Seitenansicht, Nase vorn, helle Oberseite,
+  Schattenseite, Signalstreifen an der Vorderkante, Steuerbügel.
+- **Flugpose:** Figur und Gleiter neigen sich in Flugrichtung (je schneller
+  seitwärts, desto stärker, höchstens 20°) und werden gespiegelt, wenn die
+  Flugrichtung wechselt (Abprallen an der Wand). Senkrecht fallend: gerade,
+  Blickrichtung bleibt. Name und Prozentzahl drehen nie mit.
 - **nameLabel / scoreLabel:** siehe Typografie.
 - **targetPad, waterZone, lavaZone:** siehe Farben und Layout.
 - **customPad, customZone:** Bilder aus `land` bzw. `death`.

@@ -1,123 +1,189 @@
+import { shade } from '../core/colors'
 import { colors } from '../generated/design-tokens'
-import { withOutline } from './pixel-art'
+import { pixelRuns, rasterize, withOutline } from './pixel-art'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
+/** Überlappung je Pixel: verhindert helle Fugen, wenn das Rig gedreht wird. */
+const SEAM = 0.06
 
 /**
- * Pixel-Männchen, hängt mit erhobenen Armen am Gleiter (10 × 15).
- * c = Anzug (Spielerfarbe), s = Haut, h = Helm, g = Brille, b = Stiefel, o = Gürtel.
+ * Pixel-Männchen im 16-Bit-Look (16 × 22), schaut nach rechts, hängt mit
+ * erhobenen Armen am Gleiter. Licht von links oben.
+ * c/l/C = Anzug Basis/Licht/Schatten (aus der Spielerfarbe), w = Handschuhe,
+ * h/L/H = Helm Basis/Licht/Schatten, g/G = Brille/Glanz, s/S = Haut/Schatten,
+ * k = Gürtel, b/B = Stiefel/Licht.
  */
 const FIGURE = [
-  '.s......s.',
-  '.c.hhhh.c.',
-  '.c.hhhh.c.',
-  '.c.gggg.c.',
-  '.c.ssss.c.',
-  '.cc.ss.cc.',
-  '..cccccc..',
-  '..cccccc..',
-  '..oooooo..',
-  '..cccccc..',
-  '..cc..cc..',
-  '..cc..cc..',
-  '..cc..cc..',
-  '..bb..bb..',
-  '.bbb..bbb.',
+  '...ww......ww...',
+  '...ww......ww...',
+  '...lc......lC...',
+  '...lc..LLh.lC...',
+  '...lc.LhhhHlC...',
+  '...lc.hhhhHlC...',
+  '...lc.HggGGlC...',
+  '...lc.sssSSlC...',
+  '...lc..ssS.lC...',
+  '...lccccccclC...',
+  '....lcccccccC...',
+  '....lccccccCC...',
+  '....lccccccCC...',
+  '....kkkkkkkkk...',
+  '....lcccccCCC...',
+  '....lcc..cCC....',
+  '....lcc..cCC....',
+  '....lcc..cCC....',
+  '....lcc..cCC....',
+  '....lcc..cCC....',
+  '....bbb..bbB....',
+  '....bbbB.bbbB...',
 ]
 
-function svg(width: number, height: number): SVGSVGElement {
-  const element = document.createElementNS(SVG_NS, 'svg')
-  element.setAttribute('viewBox', `0 0 ${width} ${height}`)
-  element.setAttribute('aria-hidden', 'true')
-  return element
-}
+/**
+ * Gleiter (48 × 16) als sichelförmiger Flügel, Nase rechts, darunter der
+ * Steuerbügel. a/A = Segel/Schatten, r = Streifen an der Vorderkante, k = Bügel.
+ */
+const GLIDER = (() => {
+  const top = (x: number) => 10 - 9 * Math.sin((Math.PI * x) / 60)
+  const bottom = (x: number) => 12.5 - 5 * Math.sin((Math.PI * x) / 60)
+  const nearSegment = (px: number, py: number, ax: number, ay: number, bx: number, by: number) => {
+    const t = Math.max(
+      0,
+      Math.min(
+        1,
+        ((px - ax) * (bx - ax) + (py - ay) * (by - ay)) / ((bx - ax) ** 2 + (by - ay) ** 2),
+      ),
+    )
+    return Math.hypot(px - (ax + t * (bx - ax)), py - (ay + t * (by - ay))) < 0.6
+  }
+  return rasterize(48, 16, (x, y) => {
+    const px = x + 0.5
+    const py = y + 0.5
+    if (py >= top(px) && py <= bottom(px)) {
+      if (py < top(px) + 1.3) return 'r'
+      return py > bottom(px) - 1.6 ? 'A' : 'a'
+    }
+    if (nearSegment(px, py, 26, 9, 20.5, 15.5) || nearSegment(px, py, 26, 9, 31.5, 15.5)) return 'k'
+    if (y === 15 && x >= 18 && x <= 33) return 'k'
+    return '.'
+  })
+})()
 
-function shape(name: string, attributes: Record<string, string | number>): SVGElement {
-  const element = document.createElementNS(SVG_NS, name)
-  for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value))
+/** Flach liegende Zielscheibe (65 × 15) mit fünf Ringen und Kante. */
+const TARGET = rasterize(65, 15, (x, y) => {
+  const dx = (x + 0.5 - 32.5) / 31.5
+  const top = Math.hypot(dx, (y + 0.5 - 6) / 5.5)
+  if (top < 1) {
+    const bands = [0.18, 0.42, 0.66, 0.88]
+    const ring = bands.findIndex((limit) => top < limit)
+    return ring === -1 || ring % 2 === 0 ? 'r' : 'w'
+  }
+  return Math.hypot(dx, (y + 0.5 - 8.5) / 5.5) < 1 ? 'R' : '.'
+})
+
+/** Kachelbares Wasser (30 × 20): Kamm, Tiefe, Glitzer. */
+const WATER = rasterize(30, 20, (x, y) => {
+  const crest = 2.5 + 1.5 * Math.sin((x / 30) * Math.PI * 4)
+  if (y < crest - 1) return '.'
+  if (y < crest + 1) return 'l'
+  if (y > 13 && (x + y) % 2 === 0) return 'd'
+  if (y > 16) return 'd'
+  if ((x * 7 + y * 3) % 23 === 0) return 'l'
+  return 'b'
+})
+
+/** Kachelbare Lava (30 × 20): Kruste oben, Glutblasen, Tiefe. */
+const LAVA = rasterize(30, 20, (x, y) => {
+  const crust = 1.5 + 1.2 * Math.sin((x / 30) * Math.PI * 6)
+  if (y < crust) return 'k'
+  if (Math.hypot(x - 8, y - 9) < 2.6 || Math.hypot(x - 22, y - 14) < 1.8) return 'g'
+  if (y > 14 && (x + y) % 2 === 0) return 'd'
+  if ((x * 5 + y * 11) % 29 === 0) return 'k'
+  return 'b'
+})
+
+function pixelSvg(
+  rows: readonly string[],
+  palette: Record<string, string>,
+  className: string,
+): SVGSVGElement {
+  const element = document.createElementNS(SVG_NS, 'svg')
+  element.setAttribute('viewBox', `0 0 ${rows[0]?.length ?? 0} ${rows.length}`)
+  element.setAttribute('shape-rendering', 'crispEdges')
+  element.setAttribute('preserveAspectRatio', 'none')
+  element.setAttribute('aria-hidden', 'true')
+  element.classList.add(className)
+  for (const run of pixelRuns(rows, palette)) {
+    const rect = document.createElementNS(SVG_NS, 'rect')
+    rect.setAttribute('x', String(run.x))
+    rect.setAttribute('y', String(run.y))
+    rect.setAttribute('width', String(run.width + SEAM))
+    rect.setAttribute('height', String(1 + SEAM))
+    rect.setAttribute('fill', run.fill)
+    element.append(rect)
+  }
   return element
 }
 
 export function createPixelFigure(suit: string): SVGSVGElement {
-  const palette: Record<string, string> = {
-    c: suit,
-    s: colors.skin,
-    h: colors.helmet,
-    g: colors.goggles,
-    b: colors.boots,
-    o: colors.outline,
-  }
-  const rows = withOutline(FIGURE)
-  const element = svg(rows[0]?.length ?? 0, rows.length)
-  element.setAttribute('shape-rendering', 'crispEdges')
-  element.classList.add('figure__body')
-  rows.forEach((row, y) =>
-    [...row].forEach((cell, x) => {
-      const fill = palette[cell]
-      if (fill) element.append(shape('rect', { x, y, width: 1, height: 1, fill }))
-    }),
+  return pixelSvg(
+    withOutline(FIGURE),
+    {
+      c: suit,
+      l: shade(suit, 0.3),
+      C: shade(suit, -0.35),
+      w: colors.gloves,
+      h: colors.helmet,
+      L: colors.helmetLight,
+      H: colors.helmetShadow,
+      g: colors.goggles,
+      G: colors.gogglesGlint,
+      s: colors.skin,
+      S: colors.skinShadow,
+      k: colors.belt,
+      b: colors.boots,
+      B: colors.bootsLight,
+      o: colors.outline,
+    },
+    'figure__body',
   )
-  return element
 }
 
-/** Delta-Flügel mit Schattenseite, Signalstreifen und Steuerbügel (120 × 44). */
 export function createGlider(): SVGSVGElement {
-  const element = svg(120, 44)
-  element.setAttribute('preserveAspectRatio', 'none')
-  element.classList.add('figure__glider')
-  const stroke = { stroke: colors.outline, 'stroke-width': 2, 'stroke-linejoin': 'round' }
-  element.append(
-    shape('polygon', { points: '2,26 60,4 118,26 60,20', fill: colors.glider, ...stroke }),
-    shape('polygon', { points: '60,4 118,26 60,20', fill: colors.gliderShade }),
-    shape('polyline', {
-      points: '8,24 60,6 112,24',
-      fill: 'none',
-      stroke: colors.gliderStripe,
-      'stroke-width': 3,
-    }),
-    shape('polyline', { points: '60,20 46,42 74,42 60,20', fill: 'none', ...stroke }),
+  return pixelSvg(
+    withOutline(GLIDER),
+    {
+      a: colors.glider,
+      A: colors.gliderShade,
+      r: colors.gliderStripe,
+      k: colors.outline,
+      o: colors.outline,
+    },
+    'figure__glider',
   )
-  return element
 }
 
-/** Flach liegende Zielscheibe mit sichtbarer Kante (260 × 60). */
 export function createTargetPad(): SVGSVGElement {
-  const element = svg(260, 60)
-  element.classList.add('pad__target')
-  const ring = (cy: number, rx: number, ry: number, fill: string) =>
-    shape('ellipse', { cx: 130, cy, rx, ry, fill, stroke: colors.outline, 'stroke-width': 2 })
-  element.append(
-    ring(36, 126, 22, colors.targetRim),
-    ring(28, 126, 22, colors.targetRed),
-    ring(28, 94, 16, colors.targetWhite),
-    ring(28, 62, 11, colors.targetRed),
-    ring(28, 30, 5, colors.targetWhite),
+  return pixelSvg(
+    withOutline(TARGET),
+    { r: colors.targetRed, w: colors.targetWhite, R: colors.targetRim, o: colors.outline },
+    'pad__target',
   )
-  return element
 }
 
-const tile = (content: string) =>
-  `url("data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="${SVG_NS}" width="120" height="80" viewBox="0 0 120 80">${content}</svg>`,
-  )}")`
-
-/** Kachelbares Muster der Todeszone für die eingebauten Themes. Nur eigene Konstanten. */
+/** Kachelbares Muster der Todeszone als CSS-Hintergrund. Nur eigene Konstanten. */
 export function zoneBackground(theme: 'target' | 'lava'): string {
-  if (theme === 'lava') {
-    return tile(
-      `<rect width="120" height="80" fill="${colors.lava}"/>` +
-        `<ellipse cx="30" cy="44" rx="18" ry="7" fill="${colors.lavaGlow}"/>` +
-        `<ellipse cx="88" cy="60" rx="14" ry="5" fill="${colors.lavaGlow}"/>` +
-        `<path d="M0 10 Q15 0 30 8 T60 8 T90 6 T120 10 V0 H0Z" fill="${colors.lavaCrust}"/>` +
-        `<ellipse cx="70" cy="30" rx="10" ry="4" fill="${colors.lavaCrust}"/>`,
+  const [rows, palette] =
+    theme === 'lava'
+      ? [LAVA, { b: colors.lava, d: colors.lavaDeep, g: colors.lavaGlow, k: colors.lavaCrust }]
+      : [WATER, { b: colors.water, d: colors.waterDeep, l: colors.waterLight }]
+  const rects = pixelRuns(rows, palette)
+    .map(
+      (run) =>
+        `<rect x="${run.x}" y="${run.y}" width="${run.width}" height="1" fill="${run.fill}"/>`,
     )
-  }
-  return tile(
-    `<rect width="120" height="80" fill="${colors.water}"/>` +
-      `<path d="M0 12 Q15 0 30 12 T60 12 T90 12 T120 12 V20 H0Z" fill="${colors.waterLight}"/>` +
-      `<rect x="14" y="44" width="26" height="4" fill="${colors.waterLight}"/>` +
-      `<rect x="74" y="62" width="30" height="4" fill="${colors.waterLight}"/>`,
-  )
+    .join('')
+  const markup = `<svg xmlns="${SVG_NS}" width="120" height="80" viewBox="0 0 30 20" shape-rendering="crispEdges">${rects}</svg>`
+  return `url("data:image/svg+xml,${encodeURIComponent(markup)}")`
 }
 
 export interface FigureView {
@@ -127,7 +193,10 @@ export interface FigureView {
   withGlider: boolean
 }
 
-/** Figur-Element: Prozentzahl, Name, ggf. Gleiter, dann Pixel-Figur oder Emote. */
+/**
+ * Figur-Element: Prozentzahl und Name (bleiben gerade), darunter das „Rig"
+ * aus Gleiter und Pixel-Figur bzw. Emote – nur das Rig wird geneigt/gespiegelt.
+ */
 export function createFigureElement(view: FigureView): HTMLElement {
   const element = document.createElement('div')
   element.className = 'figure'
@@ -140,17 +209,19 @@ export function createFigureElement(view: FigureView): HTMLElement {
   name.textContent = view.displayName
   name.style.color = view.color
 
-  element.append(score, name)
-  if (view.withGlider) element.append(createGlider())
-
+  const rig = document.createElement('div')
+  rig.className = 'figure__rig'
+  if (view.withGlider) rig.append(createGlider())
   if (view.emote) {
     const emote = document.createElement('img')
     emote.className = 'figure__emote'
     emote.src = view.emote
     emote.alt = ''
-    element.append(emote)
+    rig.append(emote)
   } else {
-    element.append(createPixelFigure(view.color))
+    rig.append(createPixelFigure(view.color))
   }
+
+  element.append(score, name, rig)
   return element
 }

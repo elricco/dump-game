@@ -26,3 +26,37 @@ export function withOutline(rows: readonly string[]): string[] {
       .join(''),
   )
 }
+
+/** Raster aus einer Funktion, die je Pixel ein Zeichen liefert. */
+export function rasterize(
+  width: number,
+  height: number,
+  pixel: (x: number, y: number) => string,
+): string[] {
+  return Array.from({ length: height }, (_, y) =>
+    Array.from({ length: width }, (_, x) => pixel(x, y)).join(''),
+  )
+}
+
+export interface PixelRun {
+  x: number
+  y: number
+  width: number
+  fill: string
+}
+
+/** Gleichfarbige Nachbarn einer Zeile werden zu einem Rechteck – weniger DOM-Knoten. */
+export function pixelRuns(rows: readonly string[], palette: Record<string, string>): PixelRun[] {
+  const runs: PixelRun[] = []
+  rows.forEach((row, y) => {
+    let x = 0
+    while (x < row.length) {
+      const fill = palette[row[x] ?? '']
+      let end = x + 1
+      while (end < row.length && row[end] === row[x]) end++
+      if (fill) runs.push({ x, y, width: end - x, fill })
+      x = end
+    }
+  })
+  return runs
+}
