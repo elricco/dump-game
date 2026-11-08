@@ -182,6 +182,8 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
 - Figur-Kasten 54 × 72 (Raster 18 × 24 inkl. Kontur, 3 Referenz-px je
   Pixel), Gleiter 150 × 54 (Raster 50 × 18) mittig darüber, Name 4 px über dem
   Gleiter (bzw. über der Figur, wenn kein Gleiter), Prozentzahl 4 px darüber.
+- Abstand zum Bildschirmrand richtet sich nach der Gleiterbreite (150) –
+  Gleiter und Figur werden nie abgeschnitten.
 - Emote statt Figur: 72 px hoch, Breite nach Seitenverhältnis.
 - Landefläche `target`/`lava`: 268 × 68 (Raster 67 × 17, 4 Referenz-px je
   Pixel), steht auf dem unteren Rand und
@@ -195,6 +197,9 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
   26 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
   URL-Parameter `land_surface` als Anteil der Bildhöhe (Standard 0,4 –
   passt zu Tims Kommode).
+- **Tote** sinken bei Wasser/Lava bis zur Mitte der Zone, bei `custom` bis
+  `death_surface` (Anteil der Bildhöhe, Standard 0,8 – passt zu Tims
+  Schwertwall), und liegen hinter der Landefläche.
 - **Nach der Landung** wird der Gleiter abgenommen: Die Figur steht gerade
   auf der Fläche.
 

@@ -11,7 +11,7 @@ const config = (query = '') => {
 const SIZES: GameSizes = {
   figure: { width: 40, height: 60 },
   pad: { width: 200, height: 60, surface: 0 },
-  death: 80,
+  death: { height: 80, surface: 40 },
 }
 
 /** x-Wurf, dann: gerade fallen, Seitwärts, Richtung, schnell sinken, kein Wandrutschen. */
@@ -61,7 +61,11 @@ describe('Game', () => {
   })
 
   it('stellt gelandete Figuren auf die Standhöhe der Fläche statt auf ihre Oberkante', () => {
-    const sizes = { ...SIZES, pad: { ...SIZES.pad, surface: 24 }, death: 40 }
+    const sizes = {
+      ...SIZES,
+      pad: { ...SIZES.pad, surface: 24 },
+      death: { height: 40, surface: 20 },
+    }
     const game = new Game(config('move=0&scale=2'), sizes, 1000, dropAt(0.5))
     const figure = game.spawnJump(anna, null)
     runUntilSettled(game)
@@ -74,6 +78,15 @@ describe('Game', () => {
     const figure = game.spawnJump(anna, null)
     expect(runUntilSettled(game)).toEqual([{ type: 'died', id: figure.id }])
     expect(figure.bottom).toBe(1080 - 40)
+  })
+
+  it('lässt Tote bis zur Standhöhe der Todeszone einsinken', () => {
+    const sizes = { ...SIZES, death: { height: 80, surface: 70 } }
+    const game = new Game(config('move=0'), sizes, 1000, dropAt(0))
+    const figure = game.spawnJump(anna, null)
+    runUntilSettled(game)
+    expect(figure.state).toBe('dead')
+    expect(figure.bottom).toBe(1080 - 80 + 70)
   })
 
   it('lässt gelandete Figuren mit der Fläche mitfahren', () => {

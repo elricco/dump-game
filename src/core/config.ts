@@ -13,6 +13,8 @@ export interface Config {
   /** Anteil der Bildhöhe von oben, auf dem gelandete Figuren stehen (nur custom). */
   landSurface: number
   death: string | null
+  /** Anteil der Bildhöhe von oben, bis zu dem Tote einsinken (nur custom). */
+  deathSurface: number
   sndJump: string | null
   sndHit: string | null
   sndMiss: string | null
@@ -120,6 +122,7 @@ export function parseConfig(params: URLSearchParams): ParseResult {
     land: read.httpsUrl('land'),
     landSurface: read.number('land_surface', 0.4, 0, 0.9),
     death: read.httpsUrl('death'),
+    deathSurface: read.number('death_surface', 0.8, 0, 1),
     sndJump: read.httpsUrl('snd_jump'),
     sndHit: read.httpsUrl('snd_hit'),
     sndMiss: read.httpsUrl('snd_miss'),

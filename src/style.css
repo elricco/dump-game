@@ -14,6 +14,7 @@ body {
 
 #status {
   position: absolute;
+  z-index: 10;
   top: 0;
   left: 0;
   max-height: 100%;
@@ -54,6 +55,12 @@ body {
 /* --- Spiel. Alle Masse: Referenz-px x --u (px je Referenz-px) x --scale. --- */
 .stage {
   --k: calc(var(--u, 1) * var(--scale, 1) * 1px);
+}
+
+.figures {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .figure {

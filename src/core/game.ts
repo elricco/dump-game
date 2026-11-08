@@ -17,7 +17,8 @@ export interface GameSizes {
   figure: Size
   /** surface: so weit unter der Oberkante stehen gelandete Figuren (Oberseite der Fläche). */
   pad: Size & { surface: number }
-  death: number
+  /** surface: so weit unter der Oberkante der Todeszone liegen Tote. */
+  death: { height: number; surface: number }
 }
 
 export interface Player {
@@ -85,6 +86,7 @@ const scaled = (size: Size, scale: number): Size => ({
 export class Game {
   readonly pad: Pad
   readonly deathHeight: number
+  private readonly deathSurface: number
   readonly padSurface: number
   figures: Figure[] = []
   private nextId = 1
@@ -97,7 +99,8 @@ export class Game {
   ) {
     this.pad = new Pad(width, scaled(sizes.pad, config.scale), config.move)
     this.padSurface = sizes.pad.surface * config.scale
-    this.deathHeight = sizes.death * config.scale
+    this.deathHeight = sizes.death.height * config.scale
+    this.deathSurface = sizes.death.surface * config.scale
   }
 
   spawnJump(player: Player, emote: string | null): Figure {
@@ -126,7 +129,7 @@ export class Game {
         width: this.pad.size.width,
         top: STAGE_HEIGHT - this.pad.size.height + this.padSurface,
       },
-      death: STAGE_HEIGHT - this.deathHeight / 2,
+      death: STAGE_HEIGHT - this.deathHeight + this.deathSurface,
     }
 
     const events: GameEvent[] = []
