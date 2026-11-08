@@ -7,8 +7,8 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.strict,
   {
-    files: ['*.cjs'],
-    languageOptions: { sourceType: 'commonjs', globals: globals.node },
+    files: ['*.cjs', 'scripts/**/*.mjs'],
+    languageOptions: { globals: globals.node },
   },
   {
     files: ['src/**/*.ts'],

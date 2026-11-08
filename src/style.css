@@ -44,3 +44,86 @@ body {
   margin-left: 0.5em;
   vertical-align: middle;
 }
+
+/* --- Spiel. Alle Masse: Referenz-px x --u (px je Referenz-px) x --scale. --- */
+.stage {
+  --k: calc(var(--u, 1) * var(--scale, 1) * 1px);
+}
+
+.figure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+  font-family: var(--font), sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity 300ms;
+}
+
+.figure__score,
+.figure__name {
+  margin-bottom: calc(var(--label-gap) * var(--k));
+  -webkit-text-stroke: calc(var(--outline-width) * var(--k)) var(--color-outline);
+  paint-order: stroke fill;
+}
+
+.figure__score {
+  color: var(--color-primary);
+  font-size: calc(var(--score-size) * var(--k));
+  font-weight: var(--score-weight);
+}
+
+.figure__score:empty {
+  display: none;
+}
+
+.figure__name {
+  font-size: calc(var(--name-size) * var(--k));
+  font-weight: var(--name-weight);
+  letter-spacing: var(--name-spacing);
+  text-transform: uppercase;
+}
+
+.figure__glider {
+  width: calc(var(--glider-w) * var(--k));
+  height: calc(var(--glider-h) * var(--k));
+  margin-bottom: calc(var(--glider-h) * -0.14 * var(--k));
+}
+
+.figure__body {
+  width: calc(var(--figure-w) * var(--k));
+  height: calc(var(--figure-h) * var(--k));
+}
+
+.figure__emote {
+  height: calc(var(--emote-h) * var(--k));
+  max-width: calc(var(--glider-w) * var(--k));
+  object-fit: contain;
+}
+
+.pad {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  will-change: transform;
+}
+
+.pad__target,
+.pad__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.zone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+}

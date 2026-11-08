@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DUMP Game – Design-Vorschau</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <style>
+      /* Nur fuer die Vorschau: neutraler Hintergrund statt Stream. */
+      html {
+        background: repeating-linear-gradient(45deg, #2b2f3a 0 40px, #343946 40px 80px);
+      }
+      .column {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        overflow: hidden;
+        border-right: 2px dashed #fff4;
+      }
+      .caption {
+        position: absolute;
+        top: 8px;
+        left: 12px;
+        color: #fff;
+        font: 700 16px system-ui;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="stage" class="stage"></main>
+    <script type="module" src="./src/preview.ts"></script>
+  </body>
+</html>
