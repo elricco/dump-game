@@ -21,7 +21,7 @@ export function createEventLog(root: HTMLElement) {
   const statusLine = document.createElement('p')
   const list = document.createElement('ul')
   statusLine.className = list.className = 'status'
-  root.append(statusLine, list)
+  root.prepend(statusLine, list)
 
   return {
     status(status: ChatStatus) {

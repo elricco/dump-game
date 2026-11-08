@@ -21,6 +21,13 @@ describe('createEventLog', () => {
     expect(root.textContent).toContain('Chat: connected')
   })
 
+  it('steht vor bereits vorhandenem Inhalt (z. B. der Config-Ausgabe)', () => {
+    const root = document.createElement('div')
+    root.append(document.createElement('pre'))
+    createEventLog(root).status('connected')
+    expect(root.firstElementChild?.textContent).toBe('Chat: connected')
+  })
+
   it('beschreibt Ereignisse lesbar, neueste oben', () => {
     const root = document.createElement('div')
     const log = createEventLog(root)

@@ -27,3 +27,7 @@ body {
 .status--error {
   border-left: 6px solid #ff5a5a;
 }
+
+.status:empty {
+  display: none;
+}

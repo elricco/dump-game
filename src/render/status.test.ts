@@ -30,6 +30,16 @@ describe('renderStatus', () => {
     expect(root.textContent).toContain('vol: ungültiger Wert "9"')
   })
 
+  it('zeigt die Config eingeklappt, damit sie nichts verdeckt', () => {
+    const details = show('channel=elricco1978&debug=1').querySelector('details')
+    expect(details?.open).toBe(false)
+    expect(details?.querySelector('pre')?.textContent).toContain('"channel": "elricco1978"')
+  })
+
+  it('zeigt ohne Warnungen keine leere Warnungsliste', () => {
+    expect(show('channel=elricco1978&debug=1').querySelector('ul')).toBeNull()
+  })
+
   it('setzt Fremdtext nie als HTML ein', () => {
     const root = show('channel=elricco1978&debug=1&vol=%3Cimg%20src%3Dx%3E')
     expect(root.querySelector('img')).toBeNull()

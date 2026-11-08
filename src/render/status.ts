@@ -16,9 +16,13 @@ export function renderStatus(root: HTMLElement, result: ParseResult): void {
 
   if (!result.config.debug) return
 
-  const details = document.createElement('pre')
+  const details = document.createElement('details')
   details.className = 'status'
-  details.textContent = JSON.stringify(result.config, null, 2)
+  const summary = document.createElement('summary')
+  summary.textContent = 'Config'
+  const json = document.createElement('pre')
+  json.textContent = JSON.stringify(result.config, null, 2)
+  details.append(summary, json)
 
   const warnings = document.createElement('ul')
   warnings.className = 'status'
@@ -28,5 +32,6 @@ export function renderStatus(root: HTMLElement, result: ParseResult): void {
     warnings.append(item)
   }
 
-  root.append(details, warnings)
+  if (result.warnings.length > 0) root.append(warnings)
+  root.append(details)
 }
