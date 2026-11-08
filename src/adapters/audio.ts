@@ -17,16 +17,29 @@ export interface Sounds {
   miss(): void
 }
 
-/** Sounds für Start, Landung und Tod. Fehler (z. B. Autoplay-Sperre) werden still ignoriert. */
+const SILENT: Sounds = { jump: () => {}, hit: () => {}, miss: () => {} }
+
+/**
+ * Sounds für Start, Landung und Tod: eigene URLs, sonst der eingebaute Klang
+ * (`fallback`). Fehler (z. B. Autoplay-Sperre) werden still ignoriert.
+ */
 export function createSounds(
   urls: SoundUrls,
   create: (src: string) => AudioLike = (src) => new Audio(src),
+  fallback: Sounds = SILENT,
 ): Sounds {
-  const player = (src: string | null) => () => {
-    if (!src) return
+  const player = (src: string | null, builtIn: () => void) => () => {
+    if (!src) {
+      builtIn()
+      return
+    }
     const audio = create(src)
     audio.volume = urls.vol
     audio.play().catch(() => {})
   }
-  return { jump: player(urls.sndJump), hit: player(urls.sndHit), miss: player(urls.sndMiss) }
+  return {
+    jump: player(urls.sndJump, fallback.jump),
+    hit: player(urls.sndHit, fallback.hit),
+    miss: player(urls.sndMiss, fallback.miss),
+  }
 }

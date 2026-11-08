@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { Jumper, type Lines, type Motion } from './jumper'
+import { collide, Jumper, type Lines, type Motion } from './jumper'
 
 /** Liefert die Zahlen der Reihe nach – macht den Zufall vorhersagbar. */
 const sequence = (...values: number[]) => {
@@ -117,5 +117,56 @@ describe('Jumper – resize', () => {
     const jumper = new Jumper(WORLD, SIZE, MOTION, sequence(1, 0.5, 0, 0.9, 0, 0.5))
     jumper.resize(600)
     expect(jumper.x).toBe(580)
+  })
+})
+
+describe('collide – Gleiter stoßen sich ab', () => {
+  /** Figur an Stelle x (Wurf), mit Seitwärts-Wurf und Richtung; kein gerade, kein Wandrutschen. */
+  const at = (xRoll: number, driftRoll: number, directionRoll: number) =>
+    new Jumper(WORLD, SIZE, MOTION, sequence(xRoll, 0.5, driftRoll, directionRoll, 0, 0.5))
+  // SIZE.width = 40: x = 20 + roll * 960
+
+  it('lässt zwei aufeinander zufliegende, überlappende Gleiter voneinander abprallen', () => {
+    const left = at(0.5, 0, 0.9) // x 500, nach rechts 60
+    const right = at(0.52, 1, 0.1) // x 519,2, nach links 240
+    expect(collide(left, right)).toBe(true)
+    expect(left.velocity.x).toBe(-240)
+    expect(right.velocity.x).toBe(240)
+    expect(right.x - left.x).toBeCloseTo(40)
+  })
+
+  it('stößt auch einen gerade fallenden Gleiter weg', () => {
+    const mover = at(0.5, 0, 0.9) // nach rechts 60
+    const straight = new Jumper(WORLD, SIZE, MOTION, sequence(0.52, 0.05, 0, 0.9, 0, 0.5))
+    expect(collide(mover, straight)).toBe(true)
+    expect(mover.velocity.x).toBe(-60)
+    expect(straight.velocity.x).toBe(60)
+  })
+
+  it('ignoriert Gleiter, die sich nicht berühren', () => {
+    const a = at(0.5, 0, 0.9)
+    const b = at(0.6, 0, 0.1)
+    expect(collide(a, b)).toBe(false)
+    expect(a.velocity.x).toBe(60)
+  })
+
+  it('ignoriert Gleiter, die sich schon voneinander entfernen', () => {
+    const a = at(0.5, 0, 0.1) // nach links
+    const b = at(0.52, 0, 0.9) // nach rechts
+    expect(collide(a, b)).toBe(false)
+  })
+
+  it('ignoriert Gleiter auf deutlich verschiedener Höhe', () => {
+    const a = at(0.5, 0, 0.9)
+    const b = at(0.52, 1, 0.1)
+    b.bottom = 70 // tiefer als eine Figurenhöhe (60)
+    expect(collide(a, b)).toBe(false)
+  })
+
+  it('ignoriert gelandete und tote Figuren', () => {
+    const a = at(0.5, 0, 0.9)
+    const b = at(0.52, 1, 0.1)
+    b.state = 'dead'
+    expect(collide(a, b)).toBe(false)
   })
 })

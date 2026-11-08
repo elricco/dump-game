@@ -32,18 +32,18 @@ colors:
 typography:
   name:
     fontFamily: Press Start 2P
-    fontSize: 16px
+    fontSize: 8px
     fontWeight: 400
     lineHeight: 1
     letterSpacing: 0px
   score:
     fontFamily: Press Start 2P
-    fontSize: 16px
+    fontSize: 8px
     fontWeight: 400
     lineHeight: 1
 spacing:
-  labelGap: 4px
-  outlineWidth: 4px
+  labelGap: 2px
+  outlineWidth: 2px
 components:
   scoreLabel:
     textColor: '{colors.primary}'
@@ -54,8 +54,8 @@ components:
     typography: '{typography.name}'
   figure:
     backgroundColor: '{colors.skin}'
-    width: 54px
-    height: 72px
+    width: 27px
+    height: 36px
   figureSkinShadow:
     backgroundColor: '{colors.skinShadow}'
   figureHelmet:
@@ -78,34 +78,34 @@ components:
     backgroundColor: '{colors.bootsLight}'
   glider:
     backgroundColor: '{colors.glider}'
-    width: 150px
-    height: 54px
+    width: 75px
+    height: 27px
   gliderStripe:
     backgroundColor: '{colors.gliderStripe}'
   gliderShade:
     backgroundColor: '{colors.gliderShade}'
   emote:
-    height: 72px
+    height: 36px
   targetPad:
     backgroundColor: '{colors.targetRed}'
-    width: 268px
-    height: 68px
+    width: 134px
+    height: 34px
   targetPadSurface:
-    height: 26px
+    height: 13px
   targetPadRing:
     backgroundColor: '{colors.targetWhite}'
   targetPadRim:
     backgroundColor: '{colors.targetRim}'
   waterZone:
     backgroundColor: '{colors.water}'
-    height: 80px
+    height: 40px
   waterZoneCrest:
     backgroundColor: '{colors.waterLight}'
   waterZoneDeep:
     backgroundColor: '{colors.waterDeep}'
   lavaZone:
     backgroundColor: '{colors.lava}'
-    height: 80px
+    height: 40px
   lavaZoneDeep:
     backgroundColor: '{colors.lavaDeep}'
   lavaZoneGlow:
@@ -113,9 +113,9 @@ components:
   lavaZoneCrust:
     backgroundColor: '{colors.lavaCrust}'
   customPad:
-    height: 100px
+    height: 50px
   customZone:
-    height: 88px
+    height: 44px
 omitted:
   - section: rounded
     reason: 'Pixel-Grafik und Flächen – keine abgerundeten UI-Elemente.'
@@ -168,33 +168,33 @@ Textkontrast geprüft.
 
 **Press Start 2P** – Pixel-Schrift im Stil der 8/16-Bit-Ära (SIL Open Font
 License 1.1, liegt lokal unter `src/assets/fonts/`, kein externer Request).
-Größen nur in Vielfachen ihres 8-px-Rasters. Zeichen, die die Schrift nicht
+Größen nur in Vielfachen ihres 8-px-Rasters (8 px = Grundgröße). Zeichen, die die Schrift nicht
 kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
 
-- **Name (16 px, Versalien):** über der Figur, in der Spielerfarbe mit 4 px
+- **Name (8 px, Versalien):** über der Figur, in der Spielerfarbe mit 2 px
   dunkler Kontur (`paint-order: stroke`). Steht bei allen Figuren, auch bei
   halbdurchsichtigen.
-- **Prozentzahl (16 px):** über dem Namen nach der Landung, weiß mit
+- **Prozentzahl (8 px):** über dem Namen nach der Landung, weiß mit
   derselben Kontur, deutsches Format `98,96 %`.
 
 ## Layout
 
-- Figur-Kasten 54 × 72 (Raster 18 × 24 inkl. Kontur, 3 Referenz-px je
-  Pixel), Gleiter 150 × 54 (Raster 50 × 18) mittig darüber, Name 4 px über dem
-  Gleiter (bzw. über der Figur, wenn kein Gleiter), Prozentzahl 4 px darüber.
-- Abstand zum Bildschirmrand richtet sich nach der Gleiterbreite (150) –
+- Figur-Kasten 27 × 36 (Raster 18 × 24 inkl. Kontur, 1,5 Referenz-px je
+  Pixel), Gleiter 75 × 27 (Raster 50 × 18) mittig darüber, Name 2 px über dem
+  Gleiter (bzw. über der Figur, wenn kein Gleiter), Prozentzahl 2 px darüber.
+- Abstand zum Bildschirmrand richtet sich nach der Gleiterbreite (75) –
   Gleiter und Figur werden nie abgeschnitten.
-- Emote statt Figur: 72 px hoch, Breite nach Seitenverhältnis.
-- Landefläche `target`/`lava`: 268 × 68 (Raster 67 × 17, 4 Referenz-px je
+- Emote statt Figur: 36 px hoch, Breite nach Seitenverhältnis.
+- Landefläche `target`/`lava`: 134 × 34 (Raster 67 × 17, 2 Referenz-px je
   Pixel), steht auf dem unteren Rand und
   überdeckt die Todeszone.
-- Todeszone `target`/`lava`: volle Breite, 80 hoch, Muster läuft langsam
+- Todeszone `target`/`lava`: volle Breite, 40 hoch, Muster läuft langsam
   seitlich durch.
-- `custom`: Landefläche 100 hoch, Todeszone 88 hoch, Breite jeweils nach
+- `custom`: Landefläche 50 hoch, Todeszone 44 hoch, Breite jeweils nach
   Seitenverhältnis des Bildes; die Todeszone wird gekachelt.
 - **Standhöhe (`targetPadSurface`; bei `custom` Parameter `land_surface`):** Gelandete Figuren stehen nicht auf der
   Bildoberkante, sondern auf der Oberseite der Fläche – bei der Zielscheibe
-  26 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
+  13 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
   URL-Parameter `land_surface` als Anteil der Bildhöhe (Standard 0,4 –
   passt zu Tims Kommode).
 - **Tote** sinken bei Wasser/Lava bis zur Mitte der Zone, bei `custom` bis
@@ -227,7 +227,7 @@ Wasser und Lava als kachelbare Pixel-Muster.
 - **glider:** Delta-Flügel in Seitenansicht, Nase vorn, helle Oberseite,
   Schattenseite, Signalstreifen an der Vorderkante, Steuerbügel.
 - **Flugpose:** Figur und Gleiter neigen sich in Flugrichtung (je schneller
-  seitwärts, desto stärker, höchstens 20°) und werden gespiegelt, wenn die
+  seitwärts, desto stärker, höchstens 8°) und werden gespiegelt, wenn die
   Flugrichtung wechselt (Abprallen an der Wand). Senkrecht fallend: gerade,
   Blickrichtung bleibt. Name und Prozentzahl drehen nie mit.
 - **nameLabel / scoreLabel:** siehe Typografie.

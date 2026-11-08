@@ -21,6 +21,11 @@ describe('poseFor', () => {
     expect(poseFor({ x: 10_000, y: 1 }, 1).tilt).toBe(MAX_TILT)
   })
 
+  it('neigt sich dezent – höchstens 8°', () => {
+    expect(MAX_TILT).toBe(8)
+    expect(Math.abs(poseFor({ x: 120, y: 120 }, 1).tilt)).toBeLessThanOrEqual(8)
+  })
+
   it('hängt gerade und behält die Blickrichtung, wenn sie senkrecht fällt', () => {
     expect(poseFor({ x: 0, y: 240 }, -1)).toEqual({ facing: -1, tilt: 0 })
   })

@@ -1,6 +1,6 @@
 /** Größte Schräglage in Grad. */
-export const MAX_TILT = 20
-const TILT_FACTOR = 0.6
+export const MAX_TILT = 8
+const TILT_FACTOR = 0.3
 
 export type Facing = 1 | -1
 

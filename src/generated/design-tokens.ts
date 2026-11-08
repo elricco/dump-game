@@ -31,22 +31,22 @@ export const colors = {
 export const typography = {
   name: {
     fontFamily: 'Press Start 2P',
-    fontSize: 16,
+    fontSize: 8,
     fontWeight: 400,
     lineHeight: 1,
     letterSpacing: 0,
   },
   score: {
     fontFamily: 'Press Start 2P',
-    fontSize: 16,
+    fontSize: 8,
     fontWeight: 400,
     lineHeight: 1,
   },
 } as const
 
 export const spacing = {
-  labelGap: 4,
-  outlineWidth: 4,
+  labelGap: 2,
+  outlineWidth: 2,
 } as const
 
 export const components = {
@@ -55,7 +55,7 @@ export const components = {
     backgroundColor: '#0e0e10',
     typography: {
       fontFamily: 'Press Start 2P',
-      fontSize: '16px',
+      fontSize: '8px',
       fontWeight: 400,
       lineHeight: 1,
     },
@@ -64,7 +64,7 @@ export const components = {
     backgroundColor: '#0e0e10',
     typography: {
       fontFamily: 'Press Start 2P',
-      fontSize: '16px',
+      fontSize: '8px',
       fontWeight: 400,
       lineHeight: 1,
       letterSpacing: '0px',
@@ -72,8 +72,8 @@ export const components = {
   },
   figure: {
     backgroundColor: '#f1c27d',
-    width: 54,
-    height: 72,
+    width: 27,
+    height: 36,
   },
   figureSkinShadow: {
     backgroundColor: '#c98f52',
@@ -107,8 +107,8 @@ export const components = {
   },
   glider: {
     backgroundColor: '#eef1f5',
-    width: 150,
-    height: 54,
+    width: 75,
+    height: 27,
   },
   gliderStripe: {
     backgroundColor: '#ff5a36',
@@ -117,15 +117,15 @@ export const components = {
     backgroundColor: '#b9c0cc',
   },
   emote: {
-    height: 72,
+    height: 36,
   },
   targetPad: {
     backgroundColor: '#d7263d',
-    width: 268,
-    height: 68,
+    width: 134,
+    height: 34,
   },
   targetPadSurface: {
-    height: 26,
+    height: 13,
   },
   targetPadRing: {
     backgroundColor: '#f5f5f5',
@@ -135,7 +135,7 @@ export const components = {
   },
   waterZone: {
     backgroundColor: '#1e6fd9',
-    height: 80,
+    height: 40,
   },
   waterZoneCrest: {
     backgroundColor: '#5fb3ff',
@@ -145,7 +145,7 @@ export const components = {
   },
   lavaZone: {
     backgroundColor: '#ff5a1f',
-    height: 80,
+    height: 40,
   },
   lavaZoneDeep: {
     backgroundColor: '#c7360d',
@@ -157,9 +157,9 @@ export const components = {
     backgroundColor: '#5a1a0b',
   },
   customPad: {
-    height: 100,
+    height: 50,
   },
   customZone: {
-    height: 88,
+    height: 44,
   },
 } as const

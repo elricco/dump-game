@@ -11,7 +11,11 @@ const SIZES: GameSizes = {
 }
 
 const setup = (query = '', rolls = [0.5, 0, 0, 0.9, 1, 0.9]) => {
-  const result = parseConfig(new URLSearchParams(`channel=elricco1978&move=0&${query}`))
+  const result = parseConfig(
+    new URLSearchParams(
+      `channel=elricco1978&move=0&${query}&drift_min=1&drift_max=4&sink_min=2&sink_max=4`,
+    ),
+  )
   if (!result.ok) throw new Error(result.error)
   const values = [...rolls]
   const game = new Game(result.config, SIZES, 1000, () => values.shift() ?? 0.5)

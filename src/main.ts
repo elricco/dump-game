@@ -1,4 +1,5 @@
 import { createSounds } from './adapters/audio'
+import { createSynth } from './adapters/synth'
 import { browserFetchJson, loadEmotes, type EmoteSource } from './adapters/emote-loader'
 import { browserSocket, connectChat } from './adapters/twitch-chat'
 import { parseCommand } from './core/commands'
@@ -29,7 +30,7 @@ async function start(): Promise<void> {
   let unit = setUnit(stage, window.innerHeight)
   const game = new Game(config, await themeSizes(config), window.innerWidth / unit, Math.random)
   const view = createStageView(stage, config)
-  const sounds = createSounds(config)
+  const sounds = createSounds(config, undefined, createSynth(config.vol))
   const log = config.debug ? createEventLog(statusRoot) : null
   const round = new Round(config)
   let emoteSources: EmoteSource[] = []

@@ -3,7 +3,11 @@ import { parseConfig } from './config'
 import { Game, type GameSizes } from './game'
 
 const config = (query = '') => {
-  const result = parseConfig(new URLSearchParams(`channel=elricco1978&${query}`))
+  const result = parseConfig(
+    new URLSearchParams(
+      `channel=elricco1978&${query}&drift_min=1&drift_max=4&sink_min=2&sink_max=4`,
+    ),
+  )
   if (!result.ok) throw new Error(result.error)
   return result.config
 }
@@ -129,6 +133,16 @@ describe('Game', () => {
     expect(figure.velocity).toEqual({ x: 240, y: 240 })
     runUntilSettled(game)
     expect(figure.velocity).toEqual({ x: 0, y: 0 })
+  })
+
+  it('lässt Gleiter, die zusammenstoßen, voneinander abprallen', () => {
+    const values = [0.5, 0.5, 0, 0.9, 0, 0.9, 0.52, 0.5, 0, 0.1, 0, 0.9]
+    const game = new Game(config('move=0'), SIZES, 1000, () => values.shift() ?? 0)
+    const left = game.spawnJump(anna, null) // x 500 → rechts
+    const right = game.spawnJump({ ...anna, login: 'bert' }, null) // x 519,2 → links
+    game.step(1 / 60)
+    expect(left.velocity.x).toBeLessThan(0)
+    expect(right.velocity.x).toBeGreaterThan(0)
   })
 
   it('leert das Feld beim Reset', () => {

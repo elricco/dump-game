@@ -91,3 +91,26 @@ export class Jumper {
     }
   }
 }
+
+/**
+ * Zwei fallende Gleiter, die sich überlappen und aufeinander zubewegen,
+ * stoßen sich ab: beide fliegen mit der höheren Seitwärtsgeschwindigkeit
+ * voneinander weg und werden auseinandergeschoben. Gibt zurück, ob es knallte.
+ */
+export function collide(a: Jumper, b: Jumper): boolean {
+  if (a.state !== 'falling' || b.state !== 'falling') return false
+  const dx = b.x - a.x
+  const reach = (a.size.width + b.size.width) / 2
+  if (Math.abs(dx) >= reach) return false
+  if (Math.abs(b.bottom - a.bottom) >= (a.size.height + b.size.height) / 2) return false
+  const direction = dx === 0 ? 1 : Math.sign(dx)
+  if (direction * (a.velocity.x - b.velocity.x) <= 0) return false
+
+  const speed = Math.max(Math.abs(a.velocity.x), Math.abs(b.velocity.x))
+  a.velocity.x = -direction * speed
+  b.velocity.x = direction * speed
+  const overlap = reach - Math.abs(dx)
+  a.x -= (direction * overlap) / 2
+  b.x += (direction * overlap) / 2
+  return true
+}

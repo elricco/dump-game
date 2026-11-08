@@ -35,10 +35,19 @@ describe('createSounds', () => {
     ])
   })
 
-  it('spielt nichts ohne URL', () => {
+  it('nimmt ohne URL den eingebauten Klang', () => {
     const { played, create } = recorder()
-    createSounds(urls, create).miss()
-    expect(played).toEqual([])
+    const builtIn: string[] = []
+    const fallback = {
+      jump: () => builtIn.push('jump'),
+      hit: () => builtIn.push('hit'),
+      miss: () => builtIn.push('miss'),
+    }
+    const sounds = createSounds(urls, create, fallback)
+    sounds.miss()
+    sounds.hit()
+    expect(builtIn).toEqual(['miss'])
+    expect(played.map((sound) => sound.src)).toEqual(['https://a.example/h.mp3'])
   })
 
   it('erlaubt überlappende Sounds (je Abspielen ein eigenes Objekt)', () => {

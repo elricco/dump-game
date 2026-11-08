@@ -1,7 +1,7 @@
 import { playerColor } from './colors'
 import type { Config } from './config'
 import { Pad } from './ground'
-import { Jumper, type Lines } from './jumper'
+import { collide, Jumper, type Lines } from './jumper'
 import { landingScore, opacityFor, type FigureState } from './scoring'
 
 /** Bühnenhöhe in Referenz-px – alles wird relativ dazu gerechnet. */
@@ -75,6 +75,11 @@ export class Figure {
   resize(width: number): void {
     this.jumper.resize(width)
   }
+
+  /** Intern: Zusammenstoß mit einer anderen Figur prüfen und auflösen. */
+  collideWith(other: Figure): void {
+    collide(this.jumper, other.jumper)
+  }
 }
 
 const scaled = (size: Size, scale: number): Size => ({
@@ -144,6 +149,10 @@ export class Game {
         events.push({ type: 'died', id: figure.id })
       }
     }
+
+    this.figures.forEach((figure, index) => {
+      for (const other of this.figures.slice(index + 1)) figure.collideWith(other)
+    })
 
     const opacity = opacityFor(this.figures)
     for (const figure of this.figures) figure.opacity = opacity[figure.id] ?? 1
