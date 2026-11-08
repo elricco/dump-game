@@ -16,6 +16,7 @@ describe('parseCommand', () => {
     ['!jump', { type: 'jump', arg: null }],
     ['!bump', { type: 'bump', arg: null }],
     ['!resetgame', { type: 'reset', arg: null }],
+    ['!resetscores', { type: 'resetScores', arg: null }],
     ['!JUMP', { type: 'jump', arg: null }],
     ['!jump Kappa', { type: 'jump', arg: 'Kappa' }],
     ['!bump   catJAM  noch mehr', { type: 'bump', arg: 'catJAM' }],

@@ -5,6 +5,7 @@ import type { Config, Mode } from './config'
 export type RoundEvent =
   | { type: 'spawn'; mode: Mode; message: ChatMessage; arg: string | null }
   | { type: 'reset'; reason: 'command' | 'auto' }
+  | { type: 'resetScores' }
   | { type: 'ignored'; reason: 'no-permission' | 'already-played'; login: string }
 
 /** Rundenlogik: einmal pro Person, Reset per Befehl oder nach Ruhezeit. Zeit in ms. */
@@ -17,6 +18,11 @@ export class Round {
 
   handle(message: ChatMessage, command: Command, now: number): RoundEvent {
     const { login, roles } = message
+
+    if (command.type === 'resetScores') {
+      if (!roles.broadcaster) return { type: 'ignored', reason: 'no-permission', login }
+      return { type: 'resetScores' }
+    }
 
     if (command.type === 'reset') {
       if (!isAllowed(roles, this.config.resetPerm))

@@ -14,6 +14,7 @@ describe('applyDesignVars', () => {
     expect(stage.style.getPropertyValue('--score-size')).toBe('8')
     expect(stage.style.getPropertyValue('--label-gap')).toBe('2')
     expect(stage.style.getPropertyValue('--outline-width')).toBe('2')
+    expect(stage.style.getPropertyValue('--scoreboard-inset')).toBe('16')
     expect(stage.style.getPropertyValue('--scale')).toBe('1.5')
     expect(stage.style.getPropertyValue('--figure-w')).toBe('27')
     expect(stage.style.getPropertyValue('--figure-h')).toBe('36')

@@ -15,6 +15,8 @@ function describe(event: RoundEvent, emote: string | null): string {
       return `ignored ${event.reason} ${event.login}`
     case 'reset':
       return `reset ${event.reason}`
+    case 'resetScores':
+      return 'reset highscores'
   }
 }
 

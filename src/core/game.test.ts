@@ -57,6 +57,7 @@ describe('Game', () => {
       score: null,
     })
     expect(figure.color).toMatch(/^#[0-9a-f]{6}$/)
+    expect(figure.login).toBe('anna')
   })
 
   it('wertet eine mittige Landung mit 100', () => {

@@ -13,6 +13,7 @@ export function applyDesignVars(stage: HTMLElement, scale: number): void {
   set('--font', `"${typography.name.fontFamily}"`)
   set('--label-gap', spacing.labelGap)
   set('--outline-width', spacing.outlineWidth)
+  set('--scoreboard-inset', spacing.scoreboardInset)
   set('--scale', scale)
   set('--figure-w', components.figure.width)
   set('--figure-h', components.figure.height)

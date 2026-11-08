@@ -132,3 +132,26 @@ describe('Round – Reset', () => {
     expect(game.tick(31_000)).toBeNull()
   })
 })
+
+describe('Round – Highscores zurücksetzen', () => {
+  const RESET_SCORES: Command = { type: 'resetScores', arg: null }
+
+  it('erlaubt das nur dem Broadcaster', () => {
+    const game = round('reset_perm=all')
+    expect(game.handle(from('mia', { mod: true }), RESET_SCORES, 0)).toEqual({
+      type: 'ignored',
+      reason: 'no-permission',
+      login: 'mia',
+    })
+    expect(game.handle(from('tim', { broadcaster: true }), RESET_SCORES, 0)).toEqual({
+      type: 'resetScores',
+    })
+  })
+
+  it('lässt die laufende Runde in Ruhe', () => {
+    const game = round()
+    game.handle(from('anna'), JUMP, 0)
+    game.handle(from('tim', { broadcaster: true }), RESET_SCORES, 0)
+    expect(game.handle(from('anna'), JUMP, 0).type).toBe('ignored')
+  })
+})

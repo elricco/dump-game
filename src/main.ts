@@ -9,6 +9,7 @@ import { Game } from './core/game'
 import { Round, type RoundEvent } from './core/round'
 import { applyDesignVars, setUnit } from './render/design-vars'
 import { createEventLog } from './render/event-log'
+import { createHighscores } from './render/highscore-view'
 import { createStageView } from './render/stage-view'
 import { renderStatus } from './render/status'
 import { themeSizes } from './render/theme-sizes'
@@ -30,6 +31,7 @@ async function start(): Promise<void> {
   let unit = setUnit(stage, window.innerHeight)
   const game = new Game(config, await themeSizes(config), window.innerWidth / unit, Math.random)
   const view = createStageView(stage, config)
+  const highscores = createHighscores(stage, config)
   const sounds = createSounds(config, undefined, createSynth(config.vol))
   const log = config.debug ? createEventLog(statusRoot) : null
   const round = new Round(config)
@@ -57,6 +59,8 @@ async function start(): Promise<void> {
       sounds.jump()
     } else if (event.type === 'reset') {
       game.reset()
+    } else if (event.type === 'resetScores') {
+      highscores.clear()
     }
     log?.push(event, emote)
   }
@@ -87,12 +91,15 @@ async function start(): Promise<void> {
   const frame = (now: number) => {
     const dt = Math.min((now - last) / 1000, MAX_DT)
     last = now
-    for (const event of game.step(dt)) {
+    const events = game.step(dt)
+    highscores.onGameEvents(game, events)
+    for (const event of events) {
       if (event.type === 'landed') sounds.hit()
       else if (event.type === 'died') sounds.miss()
       else sounds.peg()
     }
     view.render(game, dt, unit)
+    highscores.sync(game)
     window.requestAnimationFrame(frame)
   }
   window.requestAnimationFrame(frame)

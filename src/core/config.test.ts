@@ -37,6 +37,7 @@ const DEFAULTS = {
   cmdJump: 'jump',
   cmdBump: 'bump',
   cmdReset: 'resetgame',
+  cmdResetScores: 'resetscores',
   debug: false,
 }
 
@@ -211,12 +212,21 @@ describe('parseConfig – Befehle', () => {
     expect(result.warnings).toEqual([`cmd_jump: ungültiger Wert "${raw}", Default jump verwendet`])
   })
 
-  it('setzt bei doppelten Namen alle drei Befehle auf die Defaults', () => {
-    const result = ok('cmd_jump=go&cmd_bump=go&cmd_reset=neu')
-    expect(result.config).toMatchObject({ cmdJump: 'jump', cmdBump: 'bump', cmdReset: 'resetgame' })
+  it('setzt bei doppelten Namen alle Befehle auf die Defaults', () => {
+    const result = ok('cmd_jump=go&cmd_bump=neu&cmd_resetscores=go')
+    expect(result.config).toMatchObject({
+      cmdJump: 'jump',
+      cmdBump: 'bump',
+      cmdReset: 'resetgame',
+      cmdResetScores: 'resetscores',
+    })
     expect(result.warnings).toEqual([
-      'Befehlsnamen doppelt, Defaults jump/bump/resetgame verwendet',
+      'Befehlsnamen doppelt, Defaults jump/bump/resetgame/resetscores verwendet',
     ])
+  })
+
+  it('übernimmt einen eigenen Namen für resetscores', () => {
+    expect(ok('cmd_resetscores=neuerekorde').config.cmdResetScores).toBe('neuerekorde')
   })
 })
 

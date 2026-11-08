@@ -43,6 +43,12 @@ describe('createEventLog', () => {
     ])
   })
 
+  it('beschreibt das Zurücksetzen der Highscores', () => {
+    const root = document.createElement('div')
+    createEventLog(root).push({ type: 'resetScores' })
+    expect(lines(root)).toEqual(['reset highscores'])
+  })
+
   it('behält nur die letzten 10 Ereignisse', () => {
     const root = document.createElement('div')
     const log = createEventLog(root)

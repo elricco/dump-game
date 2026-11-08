@@ -33,6 +33,7 @@ export interface Config {
   cmdJump: string
   cmdBump: string
   cmdReset: string
+  cmdResetScores: string
   debug: boolean
 }
 
@@ -147,6 +148,7 @@ export function parseConfig(params: URLSearchParams): ParseResult {
     cmdJump: read.command('cmd_jump', 'jump'),
     cmdBump: read.command('cmd_bump', 'bump'),
     cmdReset: read.command('cmd_reset', 'resetgame'),
+    cmdResetScores: read.command('cmd_resetscores', 'resetscores'),
     debug: read.flag('debug', false),
   }
 
@@ -163,10 +165,15 @@ export function parseConfig(params: URLSearchParams): ParseResult {
     read.warn('theme=custom braucht land und death als https-URL, Default target verwendet')
   }
 
-  const commands = [config.cmdJump, config.cmdBump, config.cmdReset]
+  const commands = [config.cmdJump, config.cmdBump, config.cmdReset, config.cmdResetScores]
   if (new Set(commands).size !== commands.length) {
-    Object.assign(config, { cmdJump: 'jump', cmdBump: 'bump', cmdReset: 'resetgame' })
-    read.warn('Befehlsnamen doppelt, Defaults jump/bump/resetgame verwendet')
+    Object.assign(config, {
+      cmdJump: 'jump',
+      cmdBump: 'bump',
+      cmdReset: 'resetgame',
+      cmdResetScores: 'resetscores',
+    })
+    read.warn('Befehlsnamen doppelt, Defaults jump/bump/resetgame/resetscores verwendet')
   }
 
   return { ok: true, config, warnings: read.warnings }

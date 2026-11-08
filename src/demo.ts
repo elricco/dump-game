@@ -5,6 +5,7 @@ import { createSynth } from './adapters/synth'
 import { parseConfig } from './core/config'
 import { Game } from './core/game'
 import { applyDesignVars, setUnit } from './render/design-vars'
+import { createHighscores } from './render/highscore-view'
 import { createStageView } from './render/stage-view'
 import { themeSizes } from './render/theme-sizes'
 
@@ -31,6 +32,7 @@ async function demo(): Promise<void> {
   let unit = setUnit(stage, window.innerHeight)
   const game = new Game(config, await themeSizes(config), window.innerWidth / unit, Math.random)
   const view = createStageView(stage, config)
+  const highscores = createHighscores(stage, config)
   const sounds = createSounds(config, undefined, createSynth(config.vol))
   // Klang-Test: jeden Sound sofort anhören (Klick gibt zugleich Audio frei).
   const soundtest = document.querySelector('.soundtest')
@@ -74,12 +76,15 @@ async function demo(): Promise<void> {
   const frame = (now: number) => {
     const dt = Math.min((now - last) / 1000, 0.1)
     last = now
-    for (const event of game.step(dt)) {
+    const events = game.step(dt)
+    highscores.onGameEvents(game, events)
+    for (const event of events) {
       if (event.type === 'landed') sounds.hit()
       else if (event.type === 'died') sounds.miss()
       else sounds.peg()
     }
     view.render(game, dt, unit)
+    highscores.sync(game)
     window.requestAnimationFrame(frame)
   }
   window.requestAnimationFrame(frame)

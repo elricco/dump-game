@@ -50,6 +50,7 @@ export const typography = {
 export const spacing = {
   labelGap: 2,
   outlineWidth: 2,
+  scoreboardInset: 16,
 } as const
 
 export const components = {

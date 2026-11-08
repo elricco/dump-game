@@ -47,6 +47,7 @@ typography:
 spacing:
   labelGap: 2px
   outlineWidth: 2px
+  scoreboardInset: 16px
 components:
   scoreLabel:
     textColor: '{colors.primary}'
@@ -219,6 +220,10 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
 - **Landefläche und Todeszone** sind nur während einer Runde sichtbar: Sie
   blenden mit dem ersten `!jump`/`!bump` ein (400 ms) und mit dem Reset
   wieder aus. Ohne Runde ist das Overlay komplett leer.
+- **Highscores:** oben rechts, 16 px vom Rand, rechtsbündig, Top 5 als
+  `1. NAME 98,96 %` – Rang und Prozent weiß, Name in Spielerfarbe, alles in
+  8 px Pixel-Schrift mit Kontur, ohne Panel. Sichtbar nur während einer
+  Runde und nur mit Einträgen.
 - **Tote** sinken bei Wasser/Lava bis zur Mitte der Zone, bei `custom` bis
   `death_surface` (Anteil der Bildhöhe, Standard 0,8 – passt zu Tims
   Schwertwall), und liegen hinter der Landefläche.

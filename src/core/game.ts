@@ -49,6 +49,7 @@ export class Figure {
 
   constructor(
     readonly id: string,
+    readonly login: string,
     readonly mode: Mode,
     readonly displayName: string,
     readonly color: string,
@@ -196,6 +197,7 @@ export class Game {
   private add(mode: Mode, player: Player, emote: string | null, body: Body): Figure {
     const figure = new Figure(
       String(this.nextId++),
+      player.login,
       mode,
       player.displayName,
       playerColor(player.login, player.color),
