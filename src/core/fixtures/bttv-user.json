@@ -1,0 +1,38 @@
+{
+  "id": "5f16e46a713a61447489cf0b",
+  "channelEmotes": [
+    {
+      "id": "6228cb2506fd6a9f5be69d95",
+      "code": "elriccoShy",
+      "imageType": "gif",
+      "animated": true,
+      "userId": "5f16e46a713a61447489cf0b"
+    }
+  ],
+  "sharedEmotes": [
+    {
+      "id": "5ada077451d4120ea3918426",
+      "code": "blobDance",
+      "imageType": "gif",
+      "animated": true,
+      "user": {
+        "id": "57f24d3ea6a90cd20eaef6aa",
+        "name": "koorichi",
+        "displayName": "KooriChi",
+        "providerId": "130629630"
+      }
+    },
+    {
+      "id": "5b1740221c5a6065a7bad4b5",
+      "code": "pepeD",
+      "imageType": "gif",
+      "animated": true,
+      "user": {
+        "id": "559c3b94a9d6c1121305ff4e",
+        "name": "igoresque",
+        "displayName": "igoresque",
+        "providerId": "30393449"
+      }
+    }
+  ]
+}

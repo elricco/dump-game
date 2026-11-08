@@ -1,0 +1,37 @@
+{
+  "room": {
+    "id": "elricco1978",
+    "twitch_id": 474178035,
+    "set": 1190713
+  },
+  "sets": {
+    "1190713": {
+      "id": 1190713,
+      "title": "Channel: elricco1978",
+      "emoticons": [
+        {
+          "id": 139407,
+          "name": "LULW",
+          "height": 32,
+          "width": 28,
+          "urls": {
+            "1": "https://cdn.frankerfacez.com/emote/139407/1",
+            "2": "https://cdn.frankerfacez.com/emote/139407/2",
+            "4": "https://cdn.frankerfacez.com/emote/139407/4"
+          }
+        },
+        {
+          "id": 418189,
+          "name": "YEP",
+          "height": 31,
+          "width": 32,
+          "urls": {
+            "1": "https://cdn.frankerfacez.com/emote/418189/1",
+            "2": "https://cdn.frankerfacez.com/emote/418189/2",
+            "4": "https://cdn.frankerfacez.com/emote/418189/4"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "01HKQT8EWR000ESSWF3625XCS4",
+  "name": "Global Emotes",
+  "emotes": [
+    {
+      "id": "01FCY771D800007PQ2DF3GDTN6",
+      "name": "RainTime",
+      "flags": 1,
+      "data": {
+        "id": "01FCY771D800007PQ2DF3GDTN6",
+        "name": "RainTime",
+        "flags": 256,
+        "animated": true,
+        "host": {
+          "url": "//cdn.7tv.app/emote/01FCY771D800007PQ2DF3GDTN6",
+          "files": [
+            {
+              "name": "1x.webp",
+              "static_name": "1x_static.webp",
+              "width": 32,
+              "height": 32,
+              "frame_count": 15,
+              "size": 13620,
+              "format": "WEBP"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "01FE3XY508000AA32JP519W2EW",
+      "name": "PETPET",
+      "flags": 1,
+      "data": {
+        "id": "01FE3XY508000AA32JP519W2EW",
+        "name": "PETPET",
+        "flags": 256,
+        "animated": true,
+        "host": {
+          "url": "//cdn.7tv.app/emote/01FE3XY508000AA32JP519W2EW",
+          "files": [
+            {
+              "name": "1x.webp",
+              "static_name": "1x_static.webp",
+              "width": 32,
+              "height": 32,
+              "frame_count": 5,
+              "size": 3582,
+              "format": "WEBP"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

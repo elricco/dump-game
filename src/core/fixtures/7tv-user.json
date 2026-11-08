@@ -1,0 +1,86 @@
+{
+  "id": "474178035",
+  "platform": "TWITCH",
+  "emote_set_id": "01G23F70BR0005D6173KE3TYY9",
+  "emote_set": {
+    "id": "01G23F70BR0005D6173KE3TYY9",
+    "name": "elricco1978's Emotes",
+    "emotes": [
+      {
+        "id": "01FAJVGPA0000FAV86FDA2RVFP",
+        "name": "OMEGASP",
+        "flags": 0,
+        "data": {
+          "id": "01FAJVGPA0000FAV86FDA2RVFP",
+          "name": "OMEGASP",
+          "flags": 0,
+          "animated": false,
+          "host": {
+            "url": "//cdn.7tv.app/emote/01FAJVGPA0000FAV86FDA2RVFP",
+            "files": [
+              {
+                "name": "1x.webp",
+                "static_name": "1x.webp",
+                "width": 32,
+                "height": 32,
+                "frame_count": 1,
+                "size": 1266,
+                "format": "WEBP"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "01FP0SVC4R0001BCZZ99DVJFP8",
+        "name": "cmonDance",
+        "flags": 0,
+        "data": {
+          "id": "01FP0SVC4R0001BCZZ99DVJFP8",
+          "name": "cmonDance",
+          "flags": 0,
+          "animated": true,
+          "host": {
+            "url": "//cdn.7tv.app/emote/01FP0SVC4R0001BCZZ99DVJFP8",
+            "files": [
+              {
+                "name": "1x.webp",
+                "static_name": "1x_static.webp",
+                "width": 32,
+                "height": 32,
+                "frame_count": 55,
+                "size": 48190,
+                "format": "WEBP"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "01FDC150C8000F43V49GZTVECJ",
+        "name": "peepoJump",
+        "flags": 0,
+        "data": {
+          "id": "01FDC150C8000F43V49GZTVECJ",
+          "name": "HYPERYump",
+          "flags": 0,
+          "animated": true,
+          "host": {
+            "url": "//cdn.7tv.app/emote/01FDC150C8000F43V49GZTVECJ",
+            "files": [
+              {
+                "name": "1x.webp",
+                "static_name": "1x_static.webp",
+                "width": 32,
+                "height": 32,
+                "frame_count": 10,
+                "size": 9634,
+                "format": "WEBP"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

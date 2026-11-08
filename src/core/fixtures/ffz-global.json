@@ -1,0 +1,57 @@
+{
+  "default_sets": [3, 1539687],
+  "sets": {
+    "3": {
+      "id": 3,
+      "title": "Global Emotes",
+      "emoticons": [
+        {
+          "id": 9,
+          "name": "ZrehplaR",
+          "height": 30,
+          "width": 33,
+          "urls": {
+            "1": "https://cdn.frankerfacez.com/emote/9/1",
+            "2": "https://cdn.frankerfacez.com/emote/9/2",
+            "4": "https://cdn.frankerfacez.com/emote/9/4"
+          }
+        }
+      ]
+    },
+    "1532818": {
+      "id": 1532818,
+      "title": "Subwoofer Emote Effects",
+      "emoticons": [
+        {
+          "id": 720507,
+          "name": "ffzHyper",
+          "height": 32,
+          "width": 32,
+          "urls": {
+            "1": "https://cdn.frankerfacez.com/emote/720507/1",
+            "2": "https://cdn.frankerfacez.com/emote/720507/2",
+            "4": "https://cdn.frankerfacez.com/emote/720507/4"
+          }
+        }
+      ]
+    },
+    "1539687": {
+      "id": 1539687,
+      "title": "Emote Effects",
+      "emoticons": [
+        {
+          "id": 723890,
+          "name": "ffzW",
+          "height": 32,
+          "width": 32,
+          "urls": {
+            "1": "https://cdn.frankerfacez.com/emote/723890/1",
+            "2": "https://cdn.frankerfacez.com/emote/723890/2",
+            "4": "https://cdn.frankerfacez.com/emote/723890/4"
+          }
+        }
+      ]
+    }
+  },
+  "users": {}
+}
