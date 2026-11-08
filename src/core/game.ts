@@ -15,7 +15,8 @@ export interface Size {
 /** Größen bei scale=1 in Referenz-px (aus dem Theme). */
 export interface GameSizes {
   figure: Size
-  pad: Size
+  /** surface: so weit unter der Oberkante stehen gelandete Figuren (Oberseite der Fläche). */
+  pad: Size & { surface: number }
   death: number
 }
 
@@ -84,6 +85,7 @@ const scaled = (size: Size, scale: number): Size => ({
 export class Game {
   readonly pad: Pad
   readonly deathHeight: number
+  readonly padSurface: number
   figures: Figure[] = []
   private nextId = 1
 
@@ -94,6 +96,7 @@ export class Game {
     private readonly random: () => number,
   ) {
     this.pad = new Pad(width, scaled(sizes.pad, config.scale), config.move)
+    this.padSurface = sizes.pad.surface * config.scale
     this.deathHeight = sizes.death * config.scale
   }
 
@@ -121,7 +124,7 @@ export class Game {
       pad: {
         center: this.pad.center,
         width: this.pad.size.width,
-        top: STAGE_HEIGHT - this.pad.size.height,
+        top: STAGE_HEIGHT - this.pad.size.height + this.padSurface,
       },
       death: STAGE_HEIGHT - this.deathHeight / 2,
     }

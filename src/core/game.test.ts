@@ -10,7 +10,7 @@ const config = (query = '') => {
 
 const SIZES: GameSizes = {
   figure: { width: 40, height: 60 },
-  pad: { width: 200, height: 60 },
+  pad: { width: 200, height: 60, surface: 0 },
   death: 80,
 }
 
@@ -58,6 +58,15 @@ describe('Game', () => {
     const figure = game.spawnJump(anna, null)
     expect(runUntilSettled(game)).toEqual([{ type: 'landed', id: figure.id, score: 100 }])
     expect(figure.bottom).toBe(1080 - 60)
+  })
+
+  it('stellt gelandete Figuren auf die Standhöhe der Fläche statt auf ihre Oberkante', () => {
+    const sizes = { ...SIZES, pad: { ...SIZES.pad, surface: 24 }, death: 40 }
+    const game = new Game(config('move=0&scale=2'), sizes, 1000, dropAt(0.5))
+    const figure = game.spawnJump(anna, null)
+    runUntilSettled(game)
+    expect(figure.state).toBe('landed')
+    expect(figure.bottom).toBe(1080 - 120 + 48)
   })
 
   it('lässt Figuren neben der Fläche in der Todeszone sterben', () => {
@@ -121,6 +130,7 @@ describe('Game', () => {
     const figure = game.spawnJump(anna, null)
     expect(figure.size).toEqual({ width: 80, height: 120 })
     expect(game.pad.size).toEqual({ width: 400, height: 120 })
+    expect(game.padSurface).toBe(0)
     expect(game.deathHeight).toBe(160)
   })
 

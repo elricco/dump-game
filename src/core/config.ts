@@ -10,6 +10,8 @@ export interface Config {
   scale: number
   theme: Theme
   land: string | null
+  /** Anteil der Bildhöhe von oben, auf dem gelandete Figuren stehen (nur custom). */
+  landSurface: number
   death: string | null
   sndJump: string | null
   sndHit: string | null
@@ -116,6 +118,7 @@ export function parseConfig(params: URLSearchParams): ParseResult {
     scale: read.number('scale', 1, 0.5, 3),
     theme: read.choice<Theme>('theme', 'target', ['target', 'lava', 'custom']),
     land: read.httpsUrl('land'),
+    landSurface: read.number('land_surface', 0.4, 0, 0.9),
     death: read.httpsUrl('death'),
     sndJump: read.httpsUrl('snd_jump'),
     sndHit: read.httpsUrl('snd_hit'),

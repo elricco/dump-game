@@ -45,6 +45,12 @@ body {
   vertical-align: middle;
 }
 
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('./assets/fonts/PressStart2P-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
 /* --- Spiel. Alle Masse: Referenz-px x --u (px je Referenz-px) x --scale. --- */
 .stage {
   --k: calc(var(--u, 1) * var(--scale, 1) * 1px);
@@ -58,7 +64,7 @@ body {
   flex-direction: column;
   align-items: center;
   will-change: transform;
-  font-family: var(--font), sans-serif;
+  font-family: var(--font), system-ui, sans-serif;
   line-height: 1;
   white-space: nowrap;
   transition: opacity 300ms;
@@ -94,6 +100,10 @@ body {
   align-items: center;
   /* Drehpunkt: Steuerbuegel des Gleiters, dort haengt die Figur. */
   transform-origin: 50% calc(var(--glider-h) * var(--k));
+}
+
+.figure--landed .figure__glider {
+  display: none;
 }
 
 .figure__glider {

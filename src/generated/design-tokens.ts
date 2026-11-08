@@ -30,23 +30,23 @@ export const colors = {
 
 export const typography = {
   name: {
-    fontFamily: 'system-ui',
-    fontSize: 26,
-    fontWeight: 900,
+    fontFamily: 'Press Start 2P',
+    fontSize: 16,
+    fontWeight: 400,
     lineHeight: 1,
-    letterSpacing: '0.04em',
+    letterSpacing: 0,
   },
   score: {
-    fontFamily: 'system-ui',
-    fontSize: 24,
-    fontWeight: 900,
+    fontFamily: 'Press Start 2P',
+    fontSize: 16,
+    fontWeight: 400,
     lineHeight: 1,
   },
 } as const
 
 export const spacing = {
   labelGap: 4,
-  outlineWidth: 5,
+  outlineWidth: 4,
 } as const
 
 export const components = {
@@ -54,20 +54,20 @@ export const components = {
     textColor: '#ffffff',
     backgroundColor: '#0e0e10',
     typography: {
-      fontFamily: 'system-ui',
-      fontSize: '24px',
-      fontWeight: 900,
+      fontFamily: 'Press Start 2P',
+      fontSize: '16px',
+      fontWeight: 400,
       lineHeight: 1,
     },
   },
   nameLabel: {
     backgroundColor: '#0e0e10',
     typography: {
-      fontFamily: 'system-ui',
-      fontSize: '26px',
-      fontWeight: 900,
+      fontFamily: 'Press Start 2P',
+      fontSize: '16px',
+      fontWeight: 400,
       lineHeight: 1,
-      letterSpacing: '0.04em',
+      letterSpacing: '0px',
     },
   },
   figure: {
@@ -123,6 +123,9 @@ export const components = {
     backgroundColor: '#d7263d',
     width: 268,
     height: 68,
+  },
+  targetPadSurface: {
+    height: 26,
   },
   targetPadRing: {
     backgroundColor: '#f5f5f5',

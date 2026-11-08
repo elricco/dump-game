@@ -16,6 +16,7 @@ const DEFAULTS = {
   scale: 1,
   theme: 'target',
   land: null,
+  landSurface: 0.4,
   death: null,
   sndJump: null,
   sndHit: null,
@@ -77,6 +78,7 @@ describe('parseConfig – Zahlen', () => {
     ['wallslide', 'wallslide', '0', 0],
     ['difficulty', 'difficulty', '95', 95],
     ['reset_after', 'resetAfter', '0', 0],
+    ['land_surface', 'landSurface', '0.4', 0.4],
   ] as const)('übernimmt gültiges %s', (param, key, raw, expected) => {
     const result = ok(`${param}=${raw}`)
     expect(result.config[key]).toBe(expected)
@@ -95,6 +97,7 @@ describe('parseConfig – Zahlen', () => {
     ['difficulty', 'difficulty', '49', 100],
     ['reset_after', 'resetAfter', '601', 30],
     ['reset_after', 'resetAfter', 'Infinity', 30],
+    ['land_surface', 'landSurface', '0.95', 0.4],
   ] as const)('verwirft %s=%j und nimmt den Default', (param, key, raw, fallback) => {
     const result = ok(`${param}=${encodeURIComponent(raw)}`)
     expect(result.config[key]).toBe(fallback)

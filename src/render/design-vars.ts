@@ -10,7 +10,7 @@ export function applyDesignVars(stage: HTMLElement, scale: number): void {
   set('--name-spacing', typography.name.letterSpacing)
   set('--score-size', typography.score.fontSize)
   set('--score-weight', typography.score.fontWeight)
-  set('--font', typography.name.fontFamily)
+  set('--font', `"${typography.name.fontFamily}"`)
   set('--label-gap', spacing.labelGap)
   set('--outline-width', spacing.outlineWidth)
   set('--scale', scale)

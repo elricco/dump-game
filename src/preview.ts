@@ -83,17 +83,22 @@ themes.forEach(({ theme, label }, index) => {
   }
 
   // Gelandet: Beste voll, Zweite halb; Tote halb in der Todeszone
-  const padTop = STAGE_HEIGHT - padSize.height
+  const surface =
+    theme === 'custom'
+      ? components.customPad.height * 0.4 // land_surface-Standard
+      : components.targetPadSurface.height
+  const standLine = STAGE_HEIGHT - padSize.height + surface
   const landed = [
     { displayName: 'Tenacious', color: '#2e8b57', score: '98,96 %', dx: -12, opacity: 1 },
     { displayName: 'SadPosture', color: '#daa520', score: '49,48 %', dx: 70, opacity: 0.5 },
   ]
   for (const figure of landed) {
     const element = createFigureElement({ ...figure, emote: null, withGlider: true })
+    element.classList.add('figure--landed')
     const score = element.querySelector('.figure__score')
     if (score) score.textContent = figure.score
     element.style.opacity = String(figure.opacity)
-    place(element, padX + figure.dx * unit, padTop)
+    place(element, padX + figure.dx * unit, standLine)
     column.append(element)
   }
   const dead = createFigureElement({

@@ -31,19 +31,19 @@ colors:
   lavaCrust: '#5a1a0b'
 typography:
   name:
-    fontFamily: system-ui
-    fontSize: 26px
-    fontWeight: 900
+    fontFamily: Press Start 2P
+    fontSize: 16px
+    fontWeight: 400
     lineHeight: 1
-    letterSpacing: 0.04em
+    letterSpacing: 0px
   score:
-    fontFamily: system-ui
-    fontSize: 24px
-    fontWeight: 900
+    fontFamily: Press Start 2P
+    fontSize: 16px
+    fontWeight: 400
     lineHeight: 1
 spacing:
   labelGap: 4px
-  outlineWidth: 5px
+  outlineWidth: 4px
 components:
   scoreLabel:
     textColor: '{colors.primary}'
@@ -90,6 +90,8 @@ components:
     backgroundColor: '{colors.targetRed}'
     width: 268px
     height: 68px
+  targetPadSurface:
+    height: 26px
   targetPadRing:
     backgroundColor: '{colors.targetWhite}'
   targetPadRim:
@@ -164,12 +166,15 @@ Textkontrast geprüft.
 
 ## Typography
 
-Systemschrift (`system-ui`) in Schwarz-Gewicht – keine Webfonts, also keine
-externen Requests und nichts nachzuladen.
+**Press Start 2P** – Pixel-Schrift im Stil der 8/16-Bit-Ära (SIL Open Font
+License 1.1, liegt lokal unter `src/assets/fonts/`, kein externer Request).
+Größen nur in Vielfachen ihres 8-px-Rasters. Zeichen, die die Schrift nicht
+kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
 
-- **Name (26 px, 900, Versalien, leicht gesperrt):** über der Figur, in der
-  Spielerfarbe mit 5 px dunkler Kontur (`paint-order: stroke`).
-- **Prozentzahl (24 px, 900):** über dem Namen nach der Landung, weiß mit
+- **Name (16 px, Versalien):** über der Figur, in der Spielerfarbe mit 4 px
+  dunkler Kontur (`paint-order: stroke`). Steht bei allen Figuren, auch bei
+  halbdurchsichtigen.
+- **Prozentzahl (16 px):** über dem Namen nach der Landung, weiß mit
   derselben Kontur, deutsches Format `98,96 %`.
 
 ## Layout
@@ -185,6 +190,13 @@ externen Requests und nichts nachzuladen.
   seitlich durch.
 - `custom`: Landefläche 100 hoch, Todeszone 88 hoch, Breite jeweils nach
   Seitenverhältnis des Bildes; die Todeszone wird gekachelt.
+- **Standhöhe (`targetPadSurface`; bei `custom` Parameter `land_surface`):** Gelandete Figuren stehen nicht auf der
+  Bildoberkante, sondern auf der Oberseite der Fläche – bei der Zielscheibe
+  26 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
+  URL-Parameter `land_surface` als Anteil der Bildhöhe (Standard 0,4 –
+  passt zu Tims Kommode).
+- **Nach der Landung** wird der Gleiter abgenommen: Die Figur steht gerade
+  auf der Fläche.
 
 ## Elevation & Depth
 
