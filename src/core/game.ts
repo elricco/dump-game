@@ -4,8 +4,9 @@ import { Pad } from './ground'
 import { collide, Jumper, type Lines } from './jumper'
 import { landingScore, opacityFor, type FigureState } from './scoring'
 
-/** Bühnenhöhe in Referenz-px – alles wird relativ dazu gerechnet. */
-export const STAGE_HEIGHT = 1080
+import { STAGE_HEIGHT } from './stage'
+
+export { STAGE_HEIGHT }
 
 export interface Size {
   width: number

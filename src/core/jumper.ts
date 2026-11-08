@@ -1,3 +1,4 @@
+import { settle, type LandingEvent, type Lines } from './landing'
 import type { FigureState } from './scoring'
 
 export interface Motion {
@@ -9,13 +10,8 @@ export interface Motion {
   wallslide: number
 }
 
-/** Wo gelandet bzw. gestorben wird (Referenz-px, y wächst nach unten). */
-export interface Lines {
-  pad: { center: number; width: number; top: number }
-  death: number
-}
-
-export type JumperEvent = { type: 'landed'; offset: number } | { type: 'died' }
+export type { Lines } from './landing'
+export type JumperEvent = LandingEvent
 
 const FPS = 60
 const between = (min: number, max: number, roll: number) => min + (max - min) * roll
@@ -55,21 +51,7 @@ export class Jumper {
     const previous = this.bottom
     this.bottom += this.velocity.y * dt
 
-    const landingLine = Math.min(lines.pad.top, lines.death)
-    if (previous < landingLine && this.bottom >= landingLine) {
-      const offset = this.x - lines.pad.center
-      if (Math.abs(offset) <= lines.pad.width / 2) {
-        this.bottom = landingLine
-        this.state = 'landed'
-        return { type: 'landed', offset }
-      }
-    }
-    if (this.bottom >= lines.death) {
-      this.bottom = lines.death
-      this.state = 'dead'
-      return { type: 'died' }
-    }
-    return null
+    return settle(this, previous, lines)
   }
 
   resize(worldWidth: number): void {
