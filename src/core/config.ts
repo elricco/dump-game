@@ -42,7 +42,7 @@ export type ParseResult =
 
 const CHANNEL = /^[a-z0-9_]{3,25}$/
 const COMMAND = /^[a-z0-9_]{1,25}$/
-const ROLES: readonly Role[] = ['mod', 'vip', 'sub', 'all']
+export const ROLES: readonly Role[] = ['mod', 'vip', 'sub', 'all']
 
 class Reader {
   readonly warnings: string[] = []
@@ -107,6 +107,99 @@ class Reader {
   }
 }
 
+/** Beschreibung eines URL-Parameters – eine Quelle für Parser, Serialisierung und Config-Seite. */
+export type ParamSpec =
+  | {
+      kind: 'number'
+      name: string
+      key: keyof Config
+      fallback: number
+      min: number
+      max: number
+      step: number
+    }
+  | {
+      kind: 'choice'
+      name: string
+      key: keyof Config
+      fallback: string
+      options: readonly string[]
+    }
+  | {
+      kind: 'list'
+      name: string
+      key: keyof Config
+      fallback: readonly string[]
+      options: readonly string[]
+    }
+  | { kind: 'flag'; name: string; key: keyof Config; fallback: boolean }
+  | { kind: 'url'; name: string; key: keyof Config }
+  | { kind: 'command'; name: string; key: keyof Config; fallback: string }
+  | { kind: 'channel'; name: 'channel'; key: 'channel' }
+
+const num = (
+  name: string,
+  key: keyof Config,
+  fallback: number,
+  min: number,
+  max: number,
+  step: number,
+) => ({ kind: 'number', name, key, fallback, min, max, step }) as const
+
+export const MODES: readonly Mode[] = ['jump', 'bump']
+export const THEMES: readonly Theme[] = ['target', 'lava', 'custom']
+export const HIGHSCORES: readonly Highscore[] = ['off', 'stream', 'day', 'week', 'forever']
+
+/** Alle URL-Parameter in URL-Reihenfolge. */
+export const PARAMS: readonly ParamSpec[] = [
+  { kind: 'channel', name: 'channel', key: 'channel' },
+  { kind: 'list', name: 'modes', key: 'modes', fallback: ['jump', 'bump'], options: MODES },
+  num('vol', 'vol', 0.5, 0, 1, 0.05),
+  num('scale', 'scale', 1, 0.5, 3, 0.1),
+  { kind: 'choice', name: 'theme', key: 'theme', fallback: 'target', options: THEMES },
+  { kind: 'url', name: 'land', key: 'land' },
+  num('land_surface', 'landSurface', 0.4, 0, 0.9, 0.05),
+  { kind: 'url', name: 'death', key: 'death' },
+  num('death_surface', 'deathSurface', 0.8, 0, 1, 0.05),
+  { kind: 'url', name: 'snd_jump', key: 'sndJump' },
+  { kind: 'url', name: 'snd_hit', key: 'sndHit' },
+  { kind: 'url', name: 'snd_miss', key: 'sndMiss' },
+  num('drift_min', 'driftMin', 1.5, 0, 20, 0.5),
+  num('drift_max', 'driftMax', 3.5, 0, 20, 0.5),
+  num('sink_min', 'sinkMin', 1, 0.5, 20, 0.5),
+  num('sink_max', 'sinkMax', 2, 0.5, 20, 0.5),
+  num('straight', 'straight', 0.1, 0, 1, 0.05),
+  num('wallslide', 'wallslide', 0.1, 0, 1, 0.05),
+  num('difficulty', 'difficulty', 100, 50, 100, 1),
+  { kind: 'flag', name: 'move', key: 'move', fallback: true },
+  { kind: 'choice', name: 'highscore', key: 'highscore', fallback: 'off', options: HIGHSCORES },
+  { kind: 'list', name: 'perm', key: 'perm', fallback: ['mod'], options: ROLES },
+  { kind: 'list', name: 'reset_perm', key: 'resetPerm', fallback: ['mod'], options: ROLES },
+  num('reset_after', 'resetAfter', 30, 0, 600, 5),
+  { kind: 'command', name: 'cmd_jump', key: 'cmdJump', fallback: 'jump' },
+  { kind: 'command', name: 'cmd_bump', key: 'cmdBump', fallback: 'bump' },
+  { kind: 'command', name: 'cmd_reset', key: 'cmdReset', fallback: 'resetgame' },
+  { kind: 'command', name: 'cmd_resetscores', key: 'cmdResetScores', fallback: 'resetscores' },
+  { kind: 'flag', name: 'debug', key: 'debug', fallback: false },
+]
+
+function readParam(read: Reader, param: Exclude<ParamSpec, { kind: 'channel' }>): unknown {
+  switch (param.kind) {
+    case 'number':
+      return read.number(param.name, param.fallback, param.min, param.max)
+    case 'choice':
+      return read.choice(param.name, param.fallback, param.options)
+    case 'list':
+      return read.list(param.name, [...param.fallback], param.options)
+    case 'flag':
+      return read.flag(param.name, param.fallback)
+    case 'url':
+      return read.httpsUrl(param.name)
+    case 'command':
+      return read.command(param.name, param.fallback)
+  }
+}
+
 export function parseConfig(params: URLSearchParams): ParseResult {
   const rawChannel = params.get('channel')
   if (rawChannel === null || rawChannel === '') return { ok: false, error: 'channel fehlt' }
@@ -114,43 +207,11 @@ export function parseConfig(params: URLSearchParams): ParseResult {
   if (!CHANNEL.test(channel)) return { ok: false, error: 'channel ungültig' }
 
   const read = new Reader(params)
-  const config: Config = {
-    channel,
-    modes: read.list<Mode>('modes', ['jump', 'bump'], ['jump', 'bump']),
-    vol: read.number('vol', 0.5, 0, 1),
-    scale: read.number('scale', 1, 0.5, 3),
-    theme: read.choice<Theme>('theme', 'target', ['target', 'lava', 'custom']),
-    land: read.httpsUrl('land'),
-    landSurface: read.number('land_surface', 0.4, 0, 0.9),
-    death: read.httpsUrl('death'),
-    deathSurface: read.number('death_surface', 0.8, 0, 1),
-    sndJump: read.httpsUrl('snd_jump'),
-    sndHit: read.httpsUrl('snd_hit'),
-    sndMiss: read.httpsUrl('snd_miss'),
-    driftMin: read.number('drift_min', 1.5, 0, 20),
-    driftMax: read.number('drift_max', 3.5, 0, 20),
-    sinkMin: read.number('sink_min', 1, 0.5, 20),
-    sinkMax: read.number('sink_max', 2, 0.5, 20),
-    straight: read.number('straight', 0.1, 0, 1),
-    wallslide: read.number('wallslide', 0.1, 0, 1),
-    difficulty: read.number('difficulty', 100, 50, 100),
-    move: read.flag('move', true),
-    highscore: read.choice<Highscore>('highscore', 'off', [
-      'off',
-      'stream',
-      'day',
-      'week',
-      'forever',
-    ]),
-    perm: read.list<Role>('perm', ['mod'], ROLES),
-    resetPerm: read.list<Role>('reset_perm', ['mod'], ROLES),
-    resetAfter: read.number('reset_after', 30, 0, 600),
-    cmdJump: read.command('cmd_jump', 'jump'),
-    cmdBump: read.command('cmd_bump', 'bump'),
-    cmdReset: read.command('cmd_reset', 'resetgame'),
-    cmdResetScores: read.command('cmd_resetscores', 'resetscores'),
-    debug: read.flag('debug', false),
-  }
+  const values: Record<string, unknown> = { channel }
+  for (const param of PARAMS)
+    if (param.kind !== 'channel') values[param.key] = readParam(read, param)
+  // Vollständigkeit sichert der Test „PARAMS beschreibt jedes Config-Feld genau einmal".
+  const config = values as unknown as Config
 
   if (config.driftMin > config.driftMax) {
     ;[config.driftMin, config.driftMax] = [config.driftMax, config.driftMin]
