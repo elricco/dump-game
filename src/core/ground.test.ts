@@ -43,6 +43,12 @@ describe('Pad', () => {
     expect(pad.center).toBe(500)
   })
 
+  it('bleibt mit move=false nach resize mittig', () => {
+    const pad = new Pad(1000, size, false)
+    pad.resize(1600)
+    expect(pad.center).toBe(800)
+  })
+
   it('steht mittig, wenn die Bühne schmaler als die Fläche ist', () => {
     const pad = new Pad(150, size, true)
     pad.step(1)

@@ -35,6 +35,6 @@ export class Pad {
 
   resize(worldWidth: number): void {
     this.worldWidth = worldWidth
-    this.center = Math.min(this.max, Math.max(this.min, this.center))
+    this.center = this.move ? Math.min(this.max, Math.max(this.min, this.center)) : worldWidth / 2
   }
 }

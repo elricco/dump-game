@@ -1,0 +1,126 @@
+import { describe, expect, it } from 'vitest'
+import { parseConfig } from './config'
+import { Game, type GameSizes } from './game'
+
+const config = (query = '') => {
+  const result = parseConfig(new URLSearchParams(`channel=elricco1978&${query}`))
+  if (!result.ok) throw new Error(result.error)
+  return result.config
+}
+
+const SIZES: GameSizes = {
+  figure: { width: 40, height: 60 },
+  pad: { width: 200, height: 60 },
+  death: 80,
+}
+
+/** x-Wurf, dann: gerade fallen, Seitwärts, Richtung, schnell sinken, kein Wandrutschen. */
+const dropAt = (xRoll: number) => {
+  const values = [xRoll, 0, 0, 0.9, 1, 0.9]
+  let index = 0
+  return () => values[index++ % values.length] ?? 0
+}
+
+/** Würfel-Warteschlange: je Figur 6 Würfe, siehe dropAt. */
+const queue = () => {
+  const values: number[] = []
+  return {
+    drop: (xRoll: number) => values.push(xRoll, 0, 0, 0.9, 1, 0.9),
+    random: () => values.shift() ?? 0,
+  }
+}
+
+const anna = { login: 'anna', displayName: 'Anna', color: null }
+
+const runUntilSettled = (game: Game) => {
+  const events = []
+  for (let i = 0; i < 1000 && game.figures.some((f) => f.state === 'falling'); i++)
+    events.push(...game.step(1 / 60))
+  return events
+}
+
+describe('Game', () => {
+  it('bringt eine Figur ins Spiel, mit Farbe und Emote', () => {
+    const game = new Game(config('move=0'), SIZES, 1000, dropAt(0.5))
+    const figure = game.spawnJump(anna, 'https://cdn.7tv.app/emote/x/4x.webp')
+    expect(game.figures).toHaveLength(1)
+    expect(figure).toMatchObject({
+      displayName: 'Anna',
+      emote: 'https://cdn.7tv.app/emote/x/4x.webp',
+      state: 'falling',
+      score: null,
+    })
+    expect(figure.color).toMatch(/^#[0-9a-f]{6}$/)
+  })
+
+  it('wertet eine mittige Landung mit 100', () => {
+    const game = new Game(config('move=0'), SIZES, 1000, dropAt(0.5))
+    const figure = game.spawnJump(anna, null)
+    expect(runUntilSettled(game)).toEqual([{ type: 'landed', id: figure.id, score: 100 }])
+    expect(figure.bottom).toBe(1080 - 60)
+  })
+
+  it('lässt Figuren neben der Fläche in der Todeszone sterben', () => {
+    const game = new Game(config('move=0'), SIZES, 1000, dropAt(0))
+    const figure = game.spawnJump(anna, null)
+    expect(runUntilSettled(game)).toEqual([{ type: 'died', id: figure.id }])
+    expect(figure.bottom).toBe(1080 - 40)
+  })
+
+  it('lässt gelandete Figuren mit der Fläche mitfahren', () => {
+    // Fallzeit 1020 / 240 = 4,25 s: Fläche 500 → 900 → zurück bis ≈ 790
+    const game = new Game(config('move=1'), SIZES, 1000, dropAt(0.802))
+    const figure = game.spawnJump(anna, null)
+    runUntilSettled(game)
+    expect(figure.state).toBe('landed')
+    const offset = figure.x - game.pad.center
+    game.step(0.5)
+    expect(figure.x - game.pad.center).toBeCloseTo(offset)
+    expect(game.pad.center).not.toBe(500) // die Fläche hat sich wirklich bewegt
+  })
+
+  it('zeigt nur die Beste voll, andere Gelandete und Tote halb', () => {
+    const rolls = queue()
+    const game = new Game(config('move=0'), SIZES, 1000, rolls.random)
+    rolls.drop(0.5) // mittig → 100
+    const best = game.spawnJump(anna, null)
+    rolls.drop(0.52) // x = 519,2 → 80,8
+    const second = game.spawnJump({ ...anna, login: 'bert' }, null)
+    rolls.drop(0) // neben der Fläche → tot
+    const dead = game.spawnJump({ ...anna, login: 'cem' }, null)
+    const events = runUntilSettled(game)
+    expect(events).toContainEqual({ type: 'landed', id: second.id, score: 80.8 })
+    expect([best.opacity, second.opacity, dead.opacity]).toEqual([1, 0.5, 0.5])
+  })
+
+  it('zeigt fallende Figuren voll', () => {
+    const game = new Game(config('move=0'), SIZES, 1000, dropAt(0.5))
+    const figure = game.spawnJump(anna, null)
+    game.step(1 / 60)
+    expect(figure.opacity).toBe(1)
+  })
+
+  it('leert das Feld beim Reset', () => {
+    const game = new Game(config(), SIZES, 1000, dropAt(0.5))
+    game.spawnJump(anna, null)
+    game.reset()
+    expect(game.figures).toEqual([])
+  })
+
+  it('vergrößert Figuren und Flächen mit scale', () => {
+    const game = new Game(config('scale=2&move=0'), SIZES, 1000, dropAt(0.5))
+    const figure = game.spawnJump(anna, null)
+    expect(figure.size).toEqual({ width: 80, height: 120 })
+    expect(game.pad.size).toEqual({ width: 400, height: 120 })
+    expect(game.deathHeight).toBe(160)
+  })
+
+  it('übernimmt eine neue Bühnenbreite', () => {
+    const game = new Game(config('move=0'), SIZES, 1000, dropAt(1))
+    const figure = game.spawnJump(anna, null)
+    game.resize(600)
+    expect(game.width).toBe(600)
+    expect(figure.x).toBe(580)
+    expect(game.pad.center).toBe(300)
+  })
+})
