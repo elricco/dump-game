@@ -1,0 +1,6 @@
+dist/
+coverage/
+pnpm-lock.yaml
+planning/
+harness/
+AGENTS.md
