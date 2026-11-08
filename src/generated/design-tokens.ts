@@ -164,11 +164,11 @@ export const components = {
   },
   targetPad: {
     backgroundColor: '#d7263d',
-    width: 134,
-    height: 34,
+    width: 201,
+    height: 51,
   },
   targetPadSurface: {
-    height: 13,
+    height: 19.5,
   },
   targetPadRing: {
     backgroundColor: '#f5f5f5',
@@ -178,7 +178,7 @@ export const components = {
   },
   waterZone: {
     backgroundColor: '#1e6fd9',
-    height: 40,
+    height: 60,
   },
   waterZoneCrest: {
     backgroundColor: '#5fb3ff',
@@ -188,7 +188,7 @@ export const components = {
   },
   lavaZone: {
     backgroundColor: '#ff5a1f',
-    height: 40,
+    height: 60,
   },
   lavaZoneDeep: {
     backgroundColor: '#c7360d',
@@ -200,10 +200,10 @@ export const components = {
     backgroundColor: '#5a1a0b',
   },
   customPad: {
-    height: 50,
+    height: 75,
   },
   customZone: {
-    height: 44,
+    height: 66,
   },
   peg: {
     backgroundColor: '#aeb6c4',

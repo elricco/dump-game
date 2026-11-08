@@ -126,24 +126,24 @@ components:
     height: 36px
   targetPad:
     backgroundColor: '{colors.targetRed}'
-    width: 134px
-    height: 34px
+    width: 201px
+    height: 51px
   targetPadSurface:
-    height: 13px
+    height: 19.5px
   targetPadRing:
     backgroundColor: '{colors.targetWhite}'
   targetPadRim:
     backgroundColor: '{colors.targetRim}'
   waterZone:
     backgroundColor: '{colors.water}'
-    height: 40px
+    height: 60px
   waterZoneCrest:
     backgroundColor: '{colors.waterLight}'
   waterZoneDeep:
     backgroundColor: '{colors.waterDeep}'
   lavaZone:
     backgroundColor: '{colors.lava}'
-    height: 40px
+    height: 60px
   lavaZoneDeep:
     backgroundColor: '{colors.lavaDeep}'
   lavaZoneGlow:
@@ -151,9 +151,9 @@ components:
   lavaZoneCrust:
     backgroundColor: '{colors.lavaCrust}'
   customPad:
-    height: 50px
+    height: 75px
   customZone:
-    height: 44px
+    height: 66px
   peg:
     backgroundColor: '{colors.peg}'
     width: 18px
@@ -269,16 +269,16 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
 - Abstand zum Bildschirmrand richtet sich nach der Gleiterbreite (75) –
   Gleiter und Figur werden nie abgeschnitten.
 - Emote statt Figur: 36 px hoch, Breite nach Seitenverhältnis.
-- Landefläche `target`/`lava`: 134 × 34 (Raster 67 × 17, 2 Referenz-px je
+- Landefläche `target`/`lava`: 201 × 51 (Raster 67 × 17, 3 Referenz-px je
   Pixel), steht auf dem unteren Rand und
   überdeckt die Todeszone.
-- Todeszone `target`/`lava`: volle Breite, 40 hoch, Muster läuft langsam
+- Todeszone `target`/`lava`: volle Breite, 60 hoch, Muster läuft langsam
   seitlich durch.
-- `custom`: Landefläche 50 hoch, Todeszone 44 hoch, Breite jeweils nach
+- `custom`: Landefläche 75 hoch, Todeszone 66 hoch, Breite jeweils nach
   Seitenverhältnis des Bildes; die Todeszone wird gekachelt.
 - **Standhöhe (`targetPadSurface`; bei `custom` Parameter `land_surface`):** Gelandete Figuren stehen nicht auf der
   Bildoberkante, sondern auf der Oberseite der Fläche – bei der Zielscheibe
-  13 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
+  19,5 px unter der Oberkante (Mitte der Ellipse). Bei `custom` per
   URL-Parameter `land_surface` als Anteil der Bildhöhe (Standard 0,4 –
   passt zu Tims Kommode).
 - **Stifte (Bump):** 18 × 18 (Raster 12 × 12, 1,5 Referenz-px je Pixel),
@@ -299,6 +299,10 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
   Schwertwall), und liegen hinter der Landefläche.
 - **Nach der Landung** wird der Gleiter abgenommen: Die Figur steht gerade
   auf der Fläche.
+
+- **Größenverhältnis (Tim, 2026-11-09):** Landefläche und Todeszone sind
+  1,5-mal so groß wie die Figuren-Maßstäbe (entspricht `scale=1,5` nur für
+  den Boden); `scale` vergrößert weiterhin alles gemeinsam.
 
 ## Elevation & Depth
 
