@@ -7,6 +7,11 @@
  */
 export type EmoteTable = Map<string, string>
 
+/** Bei doppelten Namen in einer Quelle gewinnt der erste Eintrag. */
+function addFirst(table: EmoteTable, name: string, url: string): void {
+  if (!table.has(name)) table.set(name, url)
+}
+
 const SEVEN_TV_ID = /^[0-9A-Za-z]{20,32}$/
 const BTTV_ID = /^[0-9a-f]{24}$/
 const FFZ_ID = /^\d+$/
@@ -32,7 +37,7 @@ function sevenTv(emotes: unknown): EmoteTable {
     const id = asString(emote.id)
     const name = asString(emote.name)
     if (id && name && SEVEN_TV_ID.test(id))
-      table.set(name, `https://cdn.7tv.app/emote/${id}/4x.webp`)
+      addFirst(table, name, `https://cdn.7tv.app/emote/${id}/4x.webp`)
   }
   return table
 }
@@ -44,7 +49,7 @@ function bttv(emotes: unknown[]): EmoteTable {
     const id = asString(emote.id)
     const code = asString(emote.code)
     if (id && code && BTTV_ID.test(id))
-      table.set(code, `https://cdn.betterttv.net/emote/${id}/3x.webp`)
+      addFirst(table, code, `https://cdn.betterttv.net/emote/${id}/3x.webp`)
   }
   return table
 }
@@ -67,8 +72,9 @@ function ffzSets(sets: unknown, onlyIds?: string[]): EmoteTable {
       if (!id || !name || !FFZ_ID.test(id)) continue
       const animated = largestSize(emote.animated)
       const size = largestSize(emote.urls)
-      if (animated) table.set(name, `https://cdn.frankerfacez.com/emote/${id}/animated/${animated}`)
-      else if (size) table.set(name, `https://cdn.frankerfacez.com/emote/${id}/${size}`)
+      if (animated)
+        addFirst(table, name, `https://cdn.frankerfacez.com/emote/${id}/animated/${animated}`)
+      else if (size) addFirst(table, name, `https://cdn.frankerfacez.com/emote/${id}/${size}`)
     }
   }
   return table

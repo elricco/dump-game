@@ -83,6 +83,38 @@ describe('FFZ', () => {
   })
 })
 
+describe('doppelte Namen in einer Quelle', () => {
+  it('nimmt den ersten Eintrag (7TV-Sets enthalten echte Dubletten)', () => {
+    const set = {
+      emote_set: {
+        emotes: [
+          { id: '01FAJVGPA0000FAV86FDA2RVFP', name: 'REEEE' },
+          { id: '01FP0SVC4R0001BCZZ99DVJFP8', name: 'REEEE' },
+        ],
+      },
+    }
+    expect(parseSevenTvUser(set).get('REEEE')).toBe(
+      'https://cdn.7tv.app/emote/01FAJVGPA0000FAV86FDA2RVFP/4x.webp',
+    )
+    const bttvDupes = [
+      { id: '6228cb2506fd6a9f5be69d95', code: 'X' },
+      { id: '5ada077451d4120ea3918426', code: 'X' },
+    ]
+    expect(parseBttvGlobal(bttvDupes).get('X')).toContain('6228cb2506fd6a9f5be69d95')
+    const ffz = {
+      sets: {
+        a: {
+          emoticons: [
+            { id: 1, name: 'X', urls: { '1': '' } },
+            { id: 2, name: 'X', urls: { '1': '' } },
+          ],
+        },
+      },
+    }
+    expect(parseFfzRoom(ffz).get('X')).toBe('https://cdn.frankerfacez.com/emote/1/1')
+  })
+})
+
 describe('untrusted API-Antworten', () => {
   it('überspringt kaputte Einträge statt zu werfen', () => {
     const user = {

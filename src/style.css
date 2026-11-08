@@ -39,3 +39,8 @@ body {
 .status:empty {
   display: none;
 }
+
+.status li img {
+  margin-left: 0.5em;
+  vertical-align: middle;
+}

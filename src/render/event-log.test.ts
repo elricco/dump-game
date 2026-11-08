@@ -31,7 +31,7 @@ describe('createEventLog', () => {
   it('beschreibt Ereignisse lesbar, neueste oben', () => {
     const root = document.createElement('div')
     const log = createEventLog(root)
-    log.push({ type: 'spawn', mode: 'jump', message: anna, arg: 'Kappa' })
+    log.push({ type: 'spawn', mode: 'jump', message: anna, arg: 'Kappa' }, 'https://e.example/k')
     log.push({ type: 'spawn', mode: 'bump', message: anna, arg: null })
     log.push({ type: 'ignored', reason: 'already-played', login: 'anna' })
     log.push({ type: 'reset', reason: 'auto' })
@@ -60,5 +60,33 @@ describe('createEventLog', () => {
       arg: '<img src=x>',
     })
     expect(root.querySelector('b, img')).toBeNull()
+  })
+
+  it('zeigt das aufgelöste Emote als Bild mit Namen als alt-Text', () => {
+    const root = document.createElement('div')
+    const url = 'https://cdn.7tv.app/emote/01FP0SVC4R0001BCZZ99DVJFP8/4x.webp'
+    createEventLog(root).push({ type: 'spawn', mode: 'jump', message: anna, arg: 'cmonDance' }, url)
+    const img = root.querySelector('li img')
+    expect(img?.getAttribute('src')).toBe(url)
+    expect(img?.getAttribute('alt')).toBe('cmonDance')
+  })
+
+  it('zeigt kein Bild, wenn kein Emote aufgelöst wurde', () => {
+    const root = document.createElement('div')
+    createEventLog(root).push({ type: 'spawn', mode: 'jump', message: anna, arg: 'hallo' }, null)
+    expect(root.querySelector('img')).toBeNull()
+    expect(lines(root)).toEqual(['spawn jump Anna (hallo, kein Emote)'])
+  })
+
+  it('zeigt, wie viele Emotes je Quelle geladen sind, und Ausfälle', () => {
+    const root = document.createElement('div')
+    createEventLog(root).emotes({
+      sources: [
+        { label: '7TV Kanal', table: new Map([['a', 'x']]) },
+        { label: 'BTTV Kanal', table: new Map() },
+      ],
+      failed: ['BTTV Kanal'],
+    })
+    expect(root.textContent).toContain('Emotes: 7TV Kanal 1, BTTV Kanal 0 – Fehler: BTTV Kanal')
   })
 })
