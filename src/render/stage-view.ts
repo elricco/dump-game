@@ -50,6 +50,8 @@ export function createStageView(stage: HTMLElement, config: Config) {
 
   return {
     render(game: Game, dt: number, unit: number): void {
+      // Fläche und Todeszone nur während einer Runde (erste Figur bis Reset).
+      stage.classList.toggle('stage--idle', game.figures.length === 0)
       zoneOffset = (zoneOffset + ZONE_SPEED * dt) % 10_000
       zone.style.height = `${game.deathHeight * unit}px`
       zone.style.backgroundPositionX = `${-zoneOffset * unit}px`

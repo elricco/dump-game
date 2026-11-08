@@ -216,6 +216,9 @@ kennt (z. B. asiatische Anzeigenamen), fallen auf `system-ui` zurück.
   **Dezent:** Deckkraft 0,4 – sie sollen den Stream nicht dominieren.
 - **Bump-Figur:** ohne Gleiter, taumelt (dreht sich) beim Fallen je nach
   Seitwärtsbewegung, steht nach der Landung gerade.
+- **Landefläche und Todeszone** sind nur während einer Runde sichtbar: Sie
+  blenden mit dem ersten `!jump`/`!bump` ein (400 ms) und mit dem Reset
+  wieder aus. Ohne Runde ist das Overlay komplett leer.
 - **Tote** sinken bei Wasser/Lava bis zur Mitte der Zone, bei `custom` bis
   `death_surface` (Anteil der Bildhöhe, Standard 0,8 – passt zu Tims
   Schwertwall), und liegen hinter der Landefläche.

@@ -144,6 +144,16 @@ body {
   height: 100%;
 }
 
+.pad,
+.zone {
+  transition: opacity 400ms;
+}
+
+.stage--idle .pad,
+.stage--idle .zone {
+  opacity: 0;
+}
+
 .pegs {
   position: absolute;
   inset: 0;

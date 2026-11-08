@@ -29,6 +29,18 @@ const setup = (query = '', rolls = [0.5, 0, 0, 0.9, 1, 0.9]) => {
 const anna = { login: 'anna', displayName: 'Anna', color: '#8a2be2' }
 
 describe('createStageView – Landefläche und Todeszone', () => {
+  it('blendet Fläche und Todeszone aus, solange keine Runde läuft', () => {
+    const { game, stage, view } = setup()
+    view.render(game, 0, 1)
+    expect(stage.classList.contains('stage--idle')).toBe(true)
+    game.spawnJump(anna, null)
+    view.render(game, 0, 1)
+    expect(stage.classList.contains('stage--idle')).toBe(false)
+    game.reset()
+    view.render(game, 0, 1)
+    expect(stage.classList.contains('stage--idle')).toBe(true)
+  })
+
   it('zeichnet beim Theme target Zielscheibe und Wassermuster', () => {
     const { stage } = setup()
     expect(stage.querySelector('.pad .pad__target')).not.toBeNull()
