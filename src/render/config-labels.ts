@@ -70,6 +70,12 @@ export const LABELS: Record<string, Label> = {
       forever: 'Für immer',
     },
   },
+  highscore_size: {
+    label: 'Größe der Highscores',
+    help: 'Vergrößert die Liste oben rechts – zusätzlich zu „Größe". 1 = Standard.',
+    group: 'Aussehen',
+    options: { '1': '1× (Standard)', '1.5': '1,5×', '2': '2×', '2.5': '2,5×', '3': '3×' },
+  },
   theme: {
     label: 'Theme',
     help: 'Landefläche und Todeszone.',

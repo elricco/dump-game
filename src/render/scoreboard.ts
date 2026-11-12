@@ -1,12 +1,14 @@
+import type { HighscoreSize } from '../core/config'
 import type { ScoreEntry } from '../core/highscores'
 import { formatScore } from './format'
 
 /** Highscore-Liste oben rechts. Nur textContent; Farbe nur aus geprüften #rrggbb-Werten. */
-export function createScoreboard(stage: HTMLElement) {
+export function createScoreboard(stage: HTMLElement, size: HighscoreSize) {
   const list = document.createElement('ol')
   list.className = 'scoreboard'
   list.hidden = true
   list.setAttribute('aria-label', 'Highscores')
+  list.style.setProperty('--board-size', size)
   stage.append(list)
 
   return {

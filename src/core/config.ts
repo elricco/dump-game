@@ -1,6 +1,7 @@
 export type Mode = 'jump' | 'bump'
 export type Theme = 'target' | 'lava' | 'custom'
 export type Highscore = 'off' | 'stream' | 'day' | 'week' | 'forever'
+export type HighscoreSize = '1' | '1.5' | '2' | '2.5' | '3'
 export type Role = 'mod' | 'vip' | 'sub' | 'all'
 
 export interface Config {
@@ -27,6 +28,8 @@ export interface Config {
   difficulty: number
   move: boolean
   highscore: Highscore
+  /** Vergrößerung der Highscore-Liste, zusätzlich zu scale. */
+  highscoreSize: HighscoreSize
   perm: Role[]
   resetPerm: Role[]
   resetAfter: number
@@ -149,6 +152,7 @@ const num = (
 export const MODES: readonly Mode[] = ['jump', 'bump']
 export const THEMES: readonly Theme[] = ['target', 'lava', 'custom']
 export const HIGHSCORES: readonly Highscore[] = ['off', 'stream', 'day', 'week', 'forever']
+export const HIGHSCORE_SIZES: readonly HighscoreSize[] = ['1', '1.5', '2', '2.5', '3']
 
 /** Alle URL-Parameter in URL-Reihenfolge. */
 export const PARAMS: readonly ParamSpec[] = [
@@ -173,6 +177,13 @@ export const PARAMS: readonly ParamSpec[] = [
   num('difficulty', 'difficulty', 100, 50, 100, 1),
   { kind: 'flag', name: 'move', key: 'move', fallback: true },
   { kind: 'choice', name: 'highscore', key: 'highscore', fallback: 'off', options: HIGHSCORES },
+  {
+    kind: 'choice',
+    name: 'highscore_size',
+    key: 'highscoreSize',
+    fallback: '1',
+    options: HIGHSCORE_SIZES,
+  },
   { kind: 'list', name: 'perm', key: 'perm', fallback: ['mod'], options: ROLES },
   { kind: 'list', name: 'reset_perm', key: 'resetPerm', fallback: ['mod'], options: ROLES },
   num('reset_after', 'resetAfter', 30, 0, 600, 5),

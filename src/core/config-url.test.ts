@@ -60,6 +60,7 @@ describe('serializeConfig', () => {
       'difficulty=95',
       'move=0',
       'highscore=week',
+      'highscore_size=2',
       'perm=vip,sub',
       'reset_perm=all',
       'reset_after=0',
@@ -71,7 +72,7 @@ describe('serializeConfig', () => {
     ].join('&')
     const config = parse(everything)
     expect(parse(serializeConfig(config))).toEqual(config)
-    expect(serializeConfig(config).split('&')).toHaveLength(29)
+    expect(serializeConfig(config).split('&')).toHaveLength(30)
   })
 
   it('kodiert Sonderzeichen in URLs korrekt', () => {

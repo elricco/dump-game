@@ -27,7 +27,7 @@ export function createHighscores(stage: HTMLElement, config: Config) {
   if (period === 'off') return { onGameEvents: () => {}, sync: () => {}, clear: () => {} }
 
   const storage = createScoreStorage(config.channel, period, browserStorage())
-  const board = createScoreboard(stage)
+  const board = createScoreboard(stage, config.highscoreSize)
   let entries: ScoreEntry[] = storage.load()
   let shown: boolean | null = null
 

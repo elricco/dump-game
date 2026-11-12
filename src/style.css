@@ -185,6 +185,8 @@ body {
 
 /* Highscores oben rechts (DESIGN.md: Layout) – ohne Panel, nur Text mit Kontur. */
 .scoreboard {
+  /* highscore_size: Faktor auf Schrift, Kontur und Abstände, nicht auf den Randabstand. */
+  --board-k: calc(var(--k) * var(--board-size, 1));
   position: absolute;
   top: calc(var(--scoreboard-inset) * var(--k));
   right: calc(var(--scoreboard-inset) * var(--k));
@@ -193,14 +195,14 @@ body {
   list-style: none;
   text-align: right;
   font-family: var(--font), system-ui, sans-serif;
-  font-size: calc(var(--name-size) * var(--k));
+  font-size: calc(var(--name-size) * var(--board-k));
   line-height: 1;
   color: var(--color-primary);
   text-transform: uppercase;
-  -webkit-text-stroke: calc(var(--outline-width) * var(--k)) var(--color-outline);
+  -webkit-text-stroke: calc(var(--outline-width) * var(--board-k)) var(--color-outline);
   paint-order: stroke fill;
 }
 
 .scoreboard li + li {
-  margin-top: calc(var(--label-gap) * 2 * var(--k));
+  margin-top: calc(var(--label-gap) * 2 * var(--board-k));
 }

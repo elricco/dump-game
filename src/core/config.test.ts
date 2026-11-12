@@ -31,6 +31,7 @@ const DEFAULTS = {
   difficulty: 100,
   move: true,
   highscore: 'off',
+  highscoreSize: '1',
   perm: ['mod'],
   resetPerm: ['mod'],
   resetAfter: 30,
@@ -116,6 +117,7 @@ describe('parseConfig – Auswahl und Schalter', () => {
     ['theme', 'theme', 'lava', 'lava'],
     ['highscore', 'highscore', 'week', 'week'],
     ['highscore', 'highscore', 'forever', 'forever'],
+    ['highscore_size', 'highscoreSize', '2.5', '2.5'],
     ['move', 'move', '0', false],
     ['debug', 'debug', '1', true],
   ] as const)('übernimmt gültiges %s=%s', (param, key, raw, expected) => {
@@ -128,6 +130,8 @@ describe('parseConfig – Auswahl und Schalter', () => {
     ['theme', 'theme', 'neon', 'target'],
     ['theme', 'theme', 'LAVA', 'target'],
     ['highscore', 'highscore', 'month', 'off'],
+    ['highscore_size', 'highscoreSize', '1.2', '1'],
+    ['highscore_size', 'highscoreSize', '4', '1'],
     ['move', 'move', 'true', true],
     ['debug', 'debug', 'yes', false],
   ] as const)('verwirft %s=%j und nimmt den Default', (param, key, raw, fallback) => {
