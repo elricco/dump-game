@@ -2,7 +2,7 @@ import { createSounds } from './adapters/audio'
 import { createSynth } from './adapters/synth'
 import { browserFetchJson, loadEmotes, type EmoteSource } from './adapters/emote-loader'
 import { browserSocket, connectChat } from './adapters/twitch-chat'
-import { parseCommand } from './core/commands'
+import { jumpsWithGlider, parseCommand } from './core/commands'
 import { parseConfig } from './core/config'
 import { resolveEmote } from './core/emotes'
 import { Game } from './core/game'
@@ -54,7 +54,8 @@ async function start(): Promise<void> {
     if (event.type === 'spawn') {
       const tables = emoteSources.map((source) => source.table)
       emote = resolveEmote(event.message.text, event.message.emotes, tables)
-      if (event.mode === 'jump') game.spawnJump(event.message, emote)
+      if (event.mode === 'jump')
+        game.spawnJump(event.message, emote, jumpsWithGlider(event.arg, emote, config))
       else game.spawnBump(event.message, emote)
       sounds.jump()
     } else if (event.type === 'reset') {

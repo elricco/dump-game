@@ -41,6 +41,9 @@ Browser-Source.
 Jede Person spielt einmal pro Runde; nach 30 s ohne Sprung wird automatisch
 zurückgesetzt. Befehlsnamen und Rechte sind auf der Config-Seite einstellbar.
 
+Hat der Kanal ein Emote, das genau `!jump` heißt, fällt bei `!jump !jump` nur
+dieses Emote – ohne Gleiter.
+
 ## Entwicklung
 
 ```bash

@@ -20,6 +20,14 @@ export function parseCommand(text: string, config: Config): Command | null {
   return null
 }
 
+/**
+ * `!jump !jump`: Gibt es ein Emote, das genau wie der Jump-Befehl heißt,
+ * fällt nur dieses Emote – ohne Gleiter.
+ */
+export function jumpsWithGlider(arg: string | null, emote: string | null, config: Config): boolean {
+  return emote === null || arg !== `!${config.cmdJump}`
+}
+
 export function isAllowed(roles: Roles, perm: Role[]): boolean {
   if (roles.broadcaster || perm.includes('all')) return true
   return perm.some((role) => role !== 'all' && roles[role])

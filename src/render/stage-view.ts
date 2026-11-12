@@ -87,7 +87,7 @@ export function createStageView(stage: HTMLElement, config: Config) {
             displayName: figure.displayName,
             color: figure.color,
             emote: figure.emote,
-            withGlider: figure.mode === 'jump',
+            withGlider: figure.glider,
           })
           const rig = element.querySelector<HTMLElement>('.figure__rig')
           const score = element.querySelector<HTMLElement>('.figure__score')

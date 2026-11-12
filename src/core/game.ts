@@ -54,6 +54,8 @@ export class Figure {
     readonly displayName: string,
     readonly color: string,
     readonly emote: string | null,
+    /** Nur Jump-Figuren hängen am Gleiter – außer bei `!jump !jump`. */
+    readonly glider: boolean,
     private readonly body: Body,
   ) {}
 
@@ -132,9 +134,15 @@ export class Game {
     this.pegs = pegLayout(width)
   }
 
-  spawnJump(player: Player, emote: string | null): Figure {
+  spawnJump(player: Player, emote: string | null, glider = true): Figure {
     const size = scaled(this.sizes.figure, this.config.scale)
-    return this.add('jump', player, emote, new Jumper(this.width, size, this.config, this.random))
+    return this.add(
+      'jump',
+      player,
+      emote,
+      glider,
+      new Jumper(this.width, size, this.config, this.random),
+    )
   }
 
   spawnBump(player: Player, emote: string | null): Figure {
@@ -144,6 +152,7 @@ export class Game {
       'bump',
       player,
       emote,
+      false,
       new Bumper(this.width, size, size.height / 2, this.random),
     )
   }
@@ -194,7 +203,13 @@ export class Game {
     for (const figure of this.figures) figure.resize(width)
   }
 
-  private add(mode: Mode, player: Player, emote: string | null, body: Body): Figure {
+  private add(
+    mode: Mode,
+    player: Player,
+    emote: string | null,
+    glider: boolean,
+    body: Body,
+  ): Figure {
     const figure = new Figure(
       String(this.nextId++),
       player.login,
@@ -202,6 +217,7 @@ export class Game {
       player.displayName,
       playerColor(player.login, player.color),
       emote,
+      glider,
       body,
     )
     this.figures.push(figure)

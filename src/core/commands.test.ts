@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Roles } from './chat-message'
-import { isAllowed, parseCommand } from './commands'
+import { isAllowed, jumpsWithGlider, parseCommand } from './commands'
 import { parseConfig, type Config } from './config'
 
 const config = (query = '') => {
@@ -65,5 +65,21 @@ describe('isAllowed', () => {
 
   it('reicht eine passende Rolle aus mehreren', () => {
     expect(isAllowed({ ...viewer, sub: true }, ['mod', 'sub'])).toBe(true)
+  })
+})
+
+describe('jumpsWithGlider', () => {
+  const url = 'https://cdn.7tv.app/emote/x/4x.webp'
+
+  it.each([
+    ['!jump', url, '', false],
+    ['!jump', null, '', true],
+    ['jump', url, '', true],
+    ['Kappa', url, '', true],
+    [null, null, '', true],
+    ['!hop', url, 'cmd_jump=hop', false],
+    ['!jump', url, 'cmd_jump=hop', true],
+  ] as const)('arg %j, Emote %j, %j → %s', (arg, emote, query, expected) => {
+    expect(jumpsWithGlider(arg, emote, config(query))).toBe(expected)
   })
 })

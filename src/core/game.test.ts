@@ -58,6 +58,13 @@ describe('Game', () => {
     })
     expect(figure.color).toMatch(/^#[0-9a-f]{6}$/)
     expect(figure.login).toBe('anna')
+    expect(figure.glider).toBe(true)
+  })
+
+  it('lässt den Gleiter weg, wenn gewünscht – bei Bump gibt es nie einen', () => {
+    const game = new Game(config('move=0'), SIZES, 1000, dropAt(0.5))
+    expect(game.spawnJump(anna, 'https://cdn.7tv.app/emote/x/4x.webp', false).glider).toBe(false)
+    expect(game.spawnBump(anna, null).glider).toBe(false)
   })
 
   it('wertet eine mittige Landung mit 100', () => {

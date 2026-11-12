@@ -81,6 +81,17 @@ describe('createStageView – Figuren', () => {
     )
   })
 
+  it('zeichnet eine Jump-Figur am Gleiter, auf Wunsch nur das Emote', () => {
+    const { game, stage, view } = setup()
+    game.spawnJump(anna, null)
+    game.spawnJump({ ...anna, login: 'bert' }, 'https://cdn.7tv.app/emote/x/4x.webp', false)
+    view.render(game, 0, 1)
+    const [withGlider, emoteOnly] = [...stage.querySelectorAll('.figure')]
+    expect(withGlider?.querySelector('.figure__glider')).not.toBeNull()
+    expect(emoteOnly?.querySelector('.figure__glider')).toBeNull()
+    expect(emoteOnly?.querySelector('img.figure__emote')).not.toBeNull()
+  })
+
   it('entfernt Figuren nach dem Reset', () => {
     const { game, stage, view } = setup()
     game.spawnJump(anna, null)
